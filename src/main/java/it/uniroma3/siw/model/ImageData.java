@@ -10,10 +10,13 @@ public class ImageData {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
     private String id;
+
     private String name;
+
     @Lob
     @Column(nullable = false)
     private byte[] content;
+
     private String type;
-    
+
 }
