@@ -18,7 +18,6 @@ public class Person {
     private String name;
 
     @Column(nullable = false)
-
     private String surname;
 
     private LocalDate dateOfBirth;

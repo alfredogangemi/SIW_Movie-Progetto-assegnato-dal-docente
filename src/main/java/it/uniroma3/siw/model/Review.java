@@ -12,14 +12,21 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private Integer vote;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private Integer text;
 
+    @Column(nullable = false)
     private Integer likes;
 
+    @Column(nullable = false)
     private LocalDateTime creationDate;
+
+    //Possibilità di usare un metodo per persist per valorizzare le property automaticamente in fase di salvataggio
+
 }

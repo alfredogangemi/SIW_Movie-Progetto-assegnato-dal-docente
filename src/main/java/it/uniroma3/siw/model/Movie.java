@@ -14,11 +14,11 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
 
+    @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
 
+    @Column(nullable = false)
     private Integer year;
 
     @Column(nullable = false)
