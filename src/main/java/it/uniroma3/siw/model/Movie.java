@@ -24,7 +24,7 @@ public class Movie {
     @Column(nullable = false)
     private LocalDateTime creationDate;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<ImageData> images;
 
     @ManyToOne
@@ -33,7 +33,7 @@ public class Movie {
     @ManyToMany(mappedBy = "filmography")
     private Set<Person> actors;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "movie_id")
     private List<Review> reviews;
 
