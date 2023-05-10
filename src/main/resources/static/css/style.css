@@ -2,18 +2,25 @@
 @import url("footer.css");
 
 body {
-    margin: 0;
-    padding: 0;
     font-family: Arial, sans-serif;
+    min-height: 400px;
+    clear: both;
+}
+
+.home-div-last-created, .home-div {
+    max-width: 1600px;
 }
 
 .home-div {
-    background-color: #1ABB9BFF;
+    background-color: #e0e4e4;
     color: #FFFFFF;
     text-align: center;
     padding: 50px 0;
     margin: 0 auto;
-    max-width: 1200px;
+}
+
+.home-div > h2 {
+    color: black;
 }
 
 .home-div-last-created {
@@ -22,13 +29,12 @@ body {
     text-align: center;
     padding: 50px 0;
     margin: 0 auto;
-    max-width: 1200px;
 }
 
 .card {
     display: inline-block;
-    width: 200px;
-    height: 300px;
+    width: 250px;
+    height: 350px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     margin: 20px;
@@ -40,10 +46,10 @@ body {
 
 .card > img {
     max-width: 100%;
-    height: 200px;
+    height: 250px;
     border-radius: 5px;
     margin-bottom: 20px;
-    object-fit: contain
+    object-fit: cover
 }
 
 .card-title {
@@ -63,15 +69,17 @@ body {
 
 .home-divider {
     width: 30%;
-    border: 1px solid white;
+    border: 1px solid black;
 }
 
 .home-subtitle-text {
+    color: black;
     font: bold 18px Arial, sans-serif;
 }
 
 .home-tile-text {
-    font: bold 60px Arial, sans-serif;
+    color: black;
+    font: bold 55px Arial, sans-serif;
 }
 
 
