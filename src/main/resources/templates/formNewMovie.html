@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Inserimento</title>
+</head>
+
+<header th:replace="~{fragments/header :: header}"></header>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <form>
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" class="form-control" id="name" placeholder="Inserisci il nome">
+                </div>
+                <div class="form-group">
+                    <label for="year">Anno</label>
+                    <input type="text" class="form-control" id="year" placeholder="Inserisci l'anno">
+                </div>
+                <div class="form-group">
+                    <label for="attachment">Allegato</label>
+                    <input type="file" class="form-control-file" id="attachment">
+                </div>
+                <button type="submit" class="btn btn-primary">Invia</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</html>

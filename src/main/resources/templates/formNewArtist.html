@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+    <title>Inserisci un nuovo Artista</title>
+</head>
+<header th:replace="~{fragments/header :: header}"></header>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <h3>Inserisci un nuovo Artista</h3>
+            <form th:action="@{/newArtist}" method="POST" th:object="${artist}">
+                <div>
+                    <span th:text="${messaggioErrore}">Errore</span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nome">Nome:</label>
+                            <input type="text" class="form-control" id="nome" placeholder="Nome"
+                                   th:field="${artist.name}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="cognome">Cognome:</label>
+                            <input type="text" class="form-control" id="cognome" placeholder="Cognome"
+                                   th:field="${artist.surname}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="data_nascita">Data di nascita:</label>
+                            <input type="date" class="form-control" id="data_nascita" th:field="${artist.dateOfBirth}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="data_morte">Data di morte:</label>
+                            <input type="date" class="form-control" id="data_morte" th:field="${artist.dateOfDeath}">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="foto">Allega una foto:</label>
+                    <input type="file" class="form-control-file" id="foto">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary btn-submit">Invia</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

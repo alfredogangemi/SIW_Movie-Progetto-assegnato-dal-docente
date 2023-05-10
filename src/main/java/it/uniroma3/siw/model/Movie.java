@@ -28,10 +28,10 @@ public class Movie {
     private Set<ImageData> images;
 
     @ManyToOne
-    private Person director;
+    private Artist director;
 
     @ManyToMany(mappedBy = "filmography")
-    private Set<Person> actors;
+    private Set<Artist> actors;
 
     @OneToMany(cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "movie_id")
