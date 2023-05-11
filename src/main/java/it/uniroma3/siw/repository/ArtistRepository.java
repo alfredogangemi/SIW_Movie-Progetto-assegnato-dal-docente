@@ -1,8 +1,12 @@
 package it.uniroma3.siw.repository;
 
-import it.uniroma3.siw.model.Movie;
+import it.uniroma3.siw.model.Artist;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ArtistRepository<Artist, Long> extends CrudRepository<Movie, Long> {
+import java.time.LocalDate;
 
+public interface ArtistRepository extends CrudRepository<Artist, Long> {
+
+    boolean existsByNameAndSurnameAndDateOfBirth(String name, String surname, LocalDate dateOfBirth);
 }
+

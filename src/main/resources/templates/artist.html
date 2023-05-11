@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Artista</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="row" th:if="${artist}">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="artist-info">
+                <h2 th:text="${artist.name} + ' ' + ${artist.surname}">Artista</h2>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Nome:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span th:text="${artist.name}">Name</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Cognome:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span th:text="${artist.surname}">Surname</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Data di nascita:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span th:text="${artist.birthDate}">Data di nascita Artista</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Data di morte:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span th:text="${artist.deathDate}">Data di morte Artista</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Foto:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <img th:src="@{${artista.foto}}" alt="Foto Artista" style="max-width: 100%">
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <a href="#" class="btn btn-primary">Modifica artista</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
