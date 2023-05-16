@@ -1,10 +1,16 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImageData {
 
     @GeneratedValue(strategy = GenerationType.UUID)

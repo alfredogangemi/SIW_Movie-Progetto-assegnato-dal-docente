@@ -20,7 +20,10 @@
             <button type="submit" class="btn btn-primary mb-2">Cerca</button>
         </form>
     </div>
-    <table class="table mt-4">
+    <div th:if="${artists.isEmpty()}">
+        <p>Nessun risultato trovato.</p>
+    </div>
+    <table class="table mt-4" th:unless="${artists.isEmpty()}">
         <thead class="thead-light">
         <tr>
             <th scope="col">Nome</th>

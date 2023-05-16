@@ -24,8 +24,8 @@ public class Artist {
 
     private LocalDate dateOfDeath;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    private Set<ImageData> images;
+    @OneToOne(cascade = {CascadeType.ALL})
+    private ImageData image;
 
     @OneToMany
     private Set<Movie> direction;

@@ -2,33 +2,37 @@ package it.uniroma3.siw.controller;
 
 import it.uniroma3.siw.controller.validator.ArtistValidator;
 import it.uniroma3.siw.model.Artist;
+import it.uniroma3.siw.model.ImageData;
 import it.uniroma3.siw.repository.ArtistRepository;
+import it.uniroma3.siw.utils.ImageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class ArtistController {
 
     private final ArtistRepository artistRepository;
     private final ArtistValidator artistValidator;
+    private final ImageHandler imageHandler;
     private final Logger logger = LoggerFactory.getLogger(ArtistController.class);
 
     @Autowired
-    public ArtistController(ArtistRepository artistRepository, ArtistValidator artistValidator) {
+    public ArtistController(ArtistRepository artistRepository, ArtistValidator artistValidator, ImageHandler imageHandler) {
         this.artistRepository = artistRepository;
         this.artistValidator = artistValidator;
+        this.imageHandler = imageHandler;
     }
 
 
     @GetMapping(value = "/createNewArtist")
-    public String formNewMovie(Model model) {
+    public String formNewArtist(Model model) {
         model.addAttribute("artist", new Artist());
         logger.info("Redirecting to form new artist");
         return "formNewArtist";
@@ -36,16 +40,23 @@ public class ArtistController {
 
 
     @PostMapping("/newArtist")
-    public String createNewArtist(@ModelAttribute("artist") Artist artist, Model model) {
-        if (!artistRepository.existsByNameAndSurnameAndDateOfBirth(artist.getName(), artist.getSurname(),
-                artist.getDateOfBirth())) { //TODO -> Utilizzare validator
-            artistRepository.save(artist);
-            model.addAttribute("artist", artist);
-            return "redirect:/artist/" + artist.getId();
-        } else {
-            model.addAttribute("errorMessage", "Questo artista esiste già");
+    public String createNewArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
+            BindingResult bindingResult) {
+        artistValidator.validate(artist, bindingResult);
+        if (bindingResult.hasErrors()) {
             return "formNewArtist";
         }
+        if (file != null && !file.isEmpty()) {
+            ImageData image = imageHandler.handleImage(file, bindingResult);
+            if (bindingResult.hasErrors()) {
+                return "formNewArtist";
+            } else {
+                artist.setImage(image);
+            }
+        }
+        artistRepository.save(artist);
+        model.addAttribute("artist", artist);
+        return "redirect:/artist/" + artist.getId();
     }
 
 
