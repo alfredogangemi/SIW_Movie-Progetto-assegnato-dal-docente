@@ -73,14 +73,13 @@ public class ArtistController {
     @PostMapping("/updateArtist")
     public String updateArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
             BindingResult bindingResult, @ModelAttribute("id") Long id) {
-        if (id != null && artistService.existsById(id)) {
+        if (id != null && !artistService.existsById(id)) {
             bindingResult.reject("artist.generic.error");
             return "admin/formUpdateArtist";
         }
-        
-        logger.info("Data di nascita artista: {}", artist.getDateOfBirth());
         artistValidator.validate(artist, bindingResult, false);
-        if (file != null && !file.isEmpty()) { //TODO -> Capire come gestire l'update dell'immagine
+        boolean isNewImageUpdated = file != null && !file.isEmpty();
+        if (isNewImageUpdated) {
             imageValidator.validate(file, bindingResult);
         }
         if (bindingResult.hasErrors()) {
@@ -88,13 +87,18 @@ public class ArtistController {
         }
         try {
             artist.setId(id);
-            artistService.save(artist, file);
+            if (isNewImageUpdated) {
+                artistService.save(artist, file);
+            } else {
+                artistService.saveWithPresentImage(artist);
+            }
         } catch (IOException ioex) {
             logger.error("Errore nella gestione dell'allegato nell'artista", ioex);
             bindingResult.reject("image.upload.generic.error");
             return "formNewArtist";
         } catch (Exception ex) {
-            logger.error("Errore generico durante l'aggiornamento dell'artista", ex);
+            logger.error("Errore generico durante l'aggiornamento dell'artista");
+            ex.printStackTrace();
             bindingResult.reject("artist.generic.error");
             return "admin/formUpdateArtist";
         }
@@ -107,9 +111,11 @@ public class ArtistController {
     @GetMapping("/artist/{id}")
     public String getArtist(@PathVariable("id") Long id, Model model) {
         Artist artist = artistService.findArtistById(id);
-        model.addAttribute("artist", artist);
-        if (artist != null && artist.getImage() != null) {
-            model.addAttribute("image", generateHtmlSource(artist.getImage()));
+        if (artist != null) {
+            model.addAttribute("artist", artist);
+            if (artist.getImage() != null) {
+                model.addAttribute("image", generateHtmlSource(artist.getImage()));
+            }
         }
         return "artist";
     }
@@ -118,7 +124,6 @@ public class ArtistController {
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Artist artist = artistService.findArtistById(id);
         model.addAttribute("artist", artist);
-        model.addAttribute("update", true);
         return "admin/formUpdateArtist";
     }
 

@@ -63,4 +63,11 @@ public class ArtistService {
     }
 
 
+    public void saveWithPresentImage(Artist artist) {
+        Artist persistedArtist = artistRepository.findById(artist.getId())
+                .get();
+        ImageData oldImage = persistedArtist.getImage();
+        artist.setImage(oldImage);
+        artistRepository.save(artist);
+    }
 }
