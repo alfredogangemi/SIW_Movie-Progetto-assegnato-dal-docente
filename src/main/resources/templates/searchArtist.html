@@ -12,7 +12,7 @@
 <body>
 <div class="container mt-4">
     <div class="form-group mx-sm-3 mb-2 text-right">
-        <form class="form-inline" action="#" th:action="@{/search}" method="get">
+        <form class="form-inline" action="#" th:action="@{/searchArtist}" method="get">
             <div class="form-group mx-sm-3 mb-2">
                 <label for="searchInput" class="sr-only">Search</label>
                 <input type="text" class="form-control" id="searchInput" placeholder="Cerca un artista" name="name">
@@ -37,8 +37,8 @@
         <tr th:each="artist : ${artists}">
             <td th:text="${artist.name}">Nome Artista</td>
             <td th:text="${artist.surname}">Cognome Artista</td>
-            <td th:text="${artist.dateOfBirth}">Data di Nascita Artista</td>
-            <td th:text="${artist.dateOfDeath}">Data di Morte Artista</td>
+            <td th:text="${#temporals.format(artist.dateOfBirth, 'dd/MM/yyyy')}">Data di Nascita Artista</td>
+            <td th:text="${#temporals.format(artist.dateOfDeath, 'dd/MM/yyyy')}">Data di Morte Artista</td>
             <td>
                 <a th:href="@{'/artist/'+ ${artist.id}}" class="btn btn-primary btn-sm mr-2">Visualizza</a>
             </td>

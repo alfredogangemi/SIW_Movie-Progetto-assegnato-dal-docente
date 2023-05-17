@@ -18,22 +18,6 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-4">
-                        <strong>Nome:</strong>
-                    </div>
-                    <div class="col-md-8">
-                        <span th:text="${artist.name}">Name</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <strong>Cognome:</strong>
-                    </div>
-                    <div class="col-md-8">
-                        <span th:text="${artist.surname}">Surname</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
                         <strong>Data di nascita:</strong>
                     </div>
                     <div class="col-md-8">
@@ -49,11 +33,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <strong>Foto:</strong>
-                    </div>
                     <div class="col-md-8">
-                        <img alt="Foto Artista" style="max-width: 100%">
+                        <img th:src="${image}" style="max-width: 100%" alt="...">
+                    </div>
+                    <div class="col-md-8" th:unless="${image}">
+                        <p>Nessuna foto presente.</p>
                     </div>
                 </div>
                 <hr>

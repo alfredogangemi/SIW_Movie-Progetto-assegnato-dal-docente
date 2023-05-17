@@ -4,6 +4,8 @@ import io.micrometer.common.util.StringUtils;
 import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.repository.ArtistRepository;
 import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -14,16 +16,25 @@ import java.time.LocalDate;
 @Component
 public class ArtistValidator implements Validator {
     private final ArtistRepository artistRepository;
+    private final Logger logger = LoggerFactory.getLogger(ArtistValidator.class);
 
     @Autowired
     public ArtistValidator(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
-
     }
+
+    public void validate(@NonNull Object o, @NonNull Errors errors, boolean isNew) {
+        validate(o, errors);
+        if (isNew) {
+            exist((Artist) o, errors);
+        }
+    }
+
 
     @Override
     public void validate(@NonNull Object o, @NonNull Errors errors) {
         Artist artist = (Artist) o;
+        logger.debug("Starting validate new artist...");
         //1. Checking name ad surname
         if (StringUtils.isBlank(artist.getName())) {
             errors.reject("artist.not.valid.name");
@@ -54,7 +65,7 @@ public class ArtistValidator implements Validator {
     }
 
     public void exist(Artist artist, Errors errors) {
-        if (!artistRepository.existsByNameAndSurnameAndDateOfBirth(artist.getName(), artist.getSurname(), artist.getDateOfBirth())) {
+        if (artistRepository.existsByNameAndSurnameAndDateOfBirth(artist.getName(), artist.getSurname(), artist.getDateOfBirth())) {
             errors.reject("artist.already.exist");
         }
     }

@@ -1,10 +1,10 @@
 package it.uniroma3.siw.controller;
 
 import it.uniroma3.siw.controller.validator.ArtistValidator;
+import it.uniroma3.siw.controller.validator.ImageValidator;
 import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.ImageData;
-import it.uniroma3.siw.repository.ArtistRepository;
-import it.uniroma3.siw.utils.ImageHandler;
+import it.uniroma3.siw.service.ArtistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +15,22 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
+
 @Controller
 public class ArtistController {
 
-    private final ArtistRepository artistRepository;
+    private final ArtistService artistService;
     private final ArtistValidator artistValidator;
-    private final ImageHandler imageHandler;
+    private final ImageValidator imageValidator;
     private final Logger logger = LoggerFactory.getLogger(ArtistController.class);
 
     @Autowired
-    public ArtistController(ArtistRepository artistRepository, ArtistValidator artistValidator, ImageHandler imageHandler) {
-        this.artistRepository = artistRepository;
+    public ArtistController(ArtistService artistService, ArtistValidator artistValidator, ImageValidator imageValidator) {
+        this.artistService = artistService;
         this.artistValidator = artistValidator;
-        this.imageHandler = imageHandler;
+        this.imageValidator = imageValidator;
     }
 
 
@@ -42,55 +45,104 @@ public class ArtistController {
     @PostMapping("/newArtist")
     public String createNewArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
             BindingResult bindingResult) {
-        artistValidator.validate(artist, bindingResult);
+        //1. Validazione dell'artista
+        artistValidator.validate(artist, bindingResult, true);
+        //2. Validazione dell'immagine se presente
+        if (file != null && !file.isEmpty()) {
+            imageValidator.validate(file, bindingResult);
+        }
         if (bindingResult.hasErrors()) {
             return "formNewArtist";
         }
-        if (file != null && !file.isEmpty()) {
-            ImageData image = imageHandler.handleImage(file, bindingResult);
-            if (bindingResult.hasErrors()) {
-                return "formNewArtist";
-            } else {
-                artist.setImage(image);
-            }
+        try {
+            artistService.save(artist, file);
+        } catch (IOException ioex) {
+            logger.error("Errore nella gestione dell'allegato nell'artista", ioex);
+            bindingResult.reject("image.upload.generic.error");
+            return "formNewArtist";
+        } catch (Exception ex) {
+            logger.error("Errore generico durante la creazione dell'artista", ex);
+            bindingResult.reject("artist.generic.error");
+            return "formNewArtist";
         }
-        artistRepository.save(artist);
         model.addAttribute("artist", artist);
         return "redirect:/artist/" + artist.getId();
     }
 
 
+    @PostMapping("/updateArtist")
+    public String updateArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
+            BindingResult bindingResult, @ModelAttribute("id") Long id) {
+        if (id != null && artistService.existsById(id)) {
+            bindingResult.reject("artist.generic.error");
+            return "admin/formUpdateArtist";
+        }
+        
+        logger.info("Data di nascita artista: {}", artist.getDateOfBirth());
+        artistValidator.validate(artist, bindingResult, false);
+        if (file != null && !file.isEmpty()) { //TODO -> Capire come gestire l'update dell'immagine
+            imageValidator.validate(file, bindingResult);
+        }
+        if (bindingResult.hasErrors()) {
+            return "admin/formUpdateArtist";
+        }
+        try {
+            artist.setId(id);
+            artistService.save(artist, file);
+        } catch (IOException ioex) {
+            logger.error("Errore nella gestione dell'allegato nell'artista", ioex);
+            bindingResult.reject("image.upload.generic.error");
+            return "formNewArtist";
+        } catch (Exception ex) {
+            logger.error("Errore generico durante l'aggiornamento dell'artista", ex);
+            bindingResult.reject("artist.generic.error");
+            return "admin/formUpdateArtist";
+        }
+        model.addAttribute("artist", artist);
+        return "redirect:/artist/" + artist.getId();
+    }
+
+
+
     @GetMapping("/artist/{id}")
     public String getArtist(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("artist", artistRepository.findById(id)
-                .get());
+        Artist artist = artistService.findArtistById(id);
+        model.addAttribute("artist", artist);
+        if (artist != null && artist.getImage() != null) {
+            model.addAttribute("image", generateHtmlSource(artist.getImage()));
+        }
         return "artist";
     }
 
     @GetMapping("/artist/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Artist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid artist id:" + id));
+        Artist artist = artistService.findArtistById(id);
         model.addAttribute("artist", artist);
         model.addAttribute("update", true);
-        return "formNewArtist";
+        return "admin/formUpdateArtist";
     }
 
     @GetMapping("/searchArtist")
     public String searchArtist(Model model) {
-        Iterable<Artist> artists = artistRepository.findAll();
+        Iterable<Artist> artists = artistService.getAll();
         model.addAttribute("artists", artists);
         return "searchArtist";
     }
 
 
     @PostMapping("/artist/delete")
-    public String delete(@ModelAttribute("id") Long id) {
-        //TODO -> Capire come si comporta nel caso di eliminazione di artista presente in film
-        logger.info("Deleting artist with id {}", id);
-        artistRepository.findById(id)
-                .ifPresent(artistRepository::delete);
+    public String delete(@ModelAttribute("id") Long id, BindingResult bindingResult) {
+        if (id != null && artistService.existsById(id)) {
+            bindingResult.reject("artist.generic.error");
+            return "admin/formUpdateArtist";
+        }
+        artistService.deleteById(id);
         return "redirect:/";
+    }
+
+    public String generateHtmlSource(ImageData image) {
+        return "data:" + image.getType() + ";base64," + Base64.getEncoder()
+                .encodeToString(image.getContent());
     }
 
 
