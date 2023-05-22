@@ -22,11 +22,9 @@ public class Review {
     private Integer text;
 
     @Column(nullable = false)
-    private Integer likes;
-
-    @Column(nullable = false)
     private LocalDateTime creationDate;
 
-    //Possibilità di usare un metodo per persist per valorizzare le property automaticamente in fase di salvataggio
+    //TODO Utente
+
 
 }

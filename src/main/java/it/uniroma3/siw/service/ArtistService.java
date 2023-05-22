@@ -70,4 +70,8 @@ public class ArtistService {
         artist.setImage(oldImage);
         artistRepository.save(artist);
     }
+
+    public boolean existsByNameAndSurnameAndDateOfBirth(Artist artist) {
+        return artistRepository.existsByNameAndSurnameAndDateOfBirth(artist.getName(), artist.getSurname(), artist.getDateOfBirth());
+    }
 }

@@ -2,7 +2,7 @@ package it.uniroma3.siw.controller.validator;
 
 import io.micrometer.common.util.StringUtils;
 import it.uniroma3.siw.model.Artist;
-import it.uniroma3.siw.repository.ArtistRepository;
+import it.uniroma3.siw.service.ArtistService;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +15,12 @@ import java.time.LocalDate;
 
 @Component
 public class ArtistValidator implements Validator {
-    private final ArtistRepository artistRepository;
+    private final ArtistService artistService;
     private final Logger logger = LoggerFactory.getLogger(ArtistValidator.class);
 
     @Autowired
-    public ArtistValidator(ArtistRepository artistRepository) {
-        this.artistRepository = artistRepository;
+    public ArtistValidator(ArtistService artistService) {
+        this.artistService = artistService;
     }
 
     public void validate(@NonNull Object o, @NonNull Errors errors, boolean isNew) {
@@ -65,7 +65,7 @@ public class ArtistValidator implements Validator {
     }
 
     public void exist(Artist artist, Errors errors) {
-        if (artistRepository.existsByNameAndSurnameAndDateOfBirth(artist.getName(), artist.getSurname(), artist.getDateOfBirth())) {
+        if (artistService.existsByNameAndSurnameAndDateOfBirth(artist)) {
             errors.reject("artist.already.exist");
         }
     }

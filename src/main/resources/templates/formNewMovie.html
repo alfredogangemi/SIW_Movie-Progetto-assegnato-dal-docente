@@ -3,38 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <title>Inserimento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+    <title>Inserisci un nuovo Film</title>
 </head>
-
 <header th:replace="~{fragments/header :: header}"></header>
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-6 mx-auto">
-            <form>
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" class="form-control" id="name" placeholder="Inserisci il nome">
+        <div class="col-sm-6 col-sm-offset-3">
+            <h3>Inserisci un nuovo Film</h3>
+            <form th:action="@{/newMovie}" method="POST" th:object="${movie}" enctype="multipart/form-data">
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
                 </div>
                 <div class="form-group">
-                    <label for="year">Anno</label>
-                    <input type="text" class="form-control" id="year" placeholder="Inserisci l'anno">
+                    <label for="name">Nome:</label>
+                    <input type="text" class="form-control" id="name" placeholder="Nome" th:field="${movie.title}">
                 </div>
                 <div class="form-group">
-                    <label for="attachment">Allegato</label>
-                    <input type="file" class="form-control-file" id="attachment">
+                    <label for="year">Anno:</label>
+                    <input type="number" class="form-control" id="year" placeholder="Anno" th:field="${movie.year}">
                 </div>
-                <button type="submit" class="btn btn-primary">Invia</button>
+                <div class="form-group">
+                    <label for="cover">Allega copertina (obbligatorio):</label>
+                    <input type="file" class="form-control-file" id="cover" name="coverFile"
+                           accept="image/png, image/jpeg, image/gif">
+                </div>
+                <div class="form-group">
+                    <label for="images">Allega immagini:</label>
+                    <input type="file" class="form-control-file" id="images" name="imageFiles" multiple
+                           accept="image/png, image/jpeg, image/gif">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary btn-submit">Salva</button>
             </form>
         </div>
     </div>
 </div>
-
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
-
-<footer th:replace="~{fragments/footer :: footer}"></footer>
 </html>

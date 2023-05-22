@@ -8,5 +8,7 @@ import java.time.LocalDate;
 public interface ArtistRepository extends CrudRepository<Artist, Long> {
 
     boolean existsByNameAndSurnameAndDateOfBirth(String name, String surname, LocalDate dateOfBirth);
+
 }
+
 

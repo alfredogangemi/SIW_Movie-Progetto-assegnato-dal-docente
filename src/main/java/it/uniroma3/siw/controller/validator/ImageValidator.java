@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ImageValidator implements Validator {
 
 
-    @Value("${siwmovie.image.maxFileSize}")
+    @Value("${siwmovie.image.maxFileSize:#{300000}}")
     private Long maxImageFileSize;
 
 
@@ -53,7 +53,7 @@ public class ImageValidator implements Validator {
         if (type == null) {
             return false;
         }
-        
+
         return type.equals(MediaType.IMAGE_JPEG) ||
                 type.equals(MediaType.IMAGE_PNG) ||
                 type.equals(MediaType.IMAGE_GIF);

@@ -3,7 +3,6 @@ package it.uniroma3.siw.controller;
 import it.uniroma3.siw.controller.validator.ArtistValidator;
 import it.uniroma3.siw.controller.validator.ImageValidator;
 import it.uniroma3.siw.model.Artist;
-import it.uniroma3.siw.model.ImageData;
 import it.uniroma3.siw.service.ArtistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 
 @Controller
 public class ArtistController {
@@ -114,7 +112,8 @@ public class ArtistController {
         if (artist != null) {
             model.addAttribute("artist", artist);
             if (artist.getImage() != null) {
-                model.addAttribute("image", generateHtmlSource(artist.getImage()));
+                model.addAttribute("image", artist.getImage()
+                        .generateHtmlSource());
             }
         }
         return "artist";
@@ -145,10 +144,6 @@ public class ArtistController {
         return "redirect:/";
     }
 
-    public String generateHtmlSource(ImageData image) {
-        return "data:" + image.getType() + ";base64," + Base64.getEncoder()
-                .encodeToString(image.getContent());
-    }
 
 
 }

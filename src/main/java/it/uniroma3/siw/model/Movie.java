@@ -27,6 +27,9 @@ public class Movie {
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<ImageData> images;
 
+    @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private ImageData cover;
+
     @ManyToOne
     private Artist director;
 
