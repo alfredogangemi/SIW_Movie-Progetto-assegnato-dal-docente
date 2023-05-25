@@ -58,6 +58,7 @@ public class MovieController {
         //TODO -> Gestire altre immagini
         try {
             movie.setCreationDate(LocalDateTime.now());
+            movie.setAverageVote(0.0D);
             if (file != null) {
                 ImageData image = ImageData.builder()
                         .name(file.getOriginalFilename())
@@ -93,4 +94,11 @@ public class MovieController {
         return "movie";
     }
 
+
+    @GetMapping("/searchMovie")
+    public String searchArtist(Model model) {
+        Iterable<Movie> movies = movieService.getAll();
+        model.addAttribute("movies", movies);
+        return "searchMovie";
+    }
 }

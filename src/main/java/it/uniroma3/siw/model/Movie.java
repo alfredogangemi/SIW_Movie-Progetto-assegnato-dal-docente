@@ -40,4 +40,7 @@ public class Movie {
     @JoinColumn(name = "movie_id")
     private List<Review> reviews;
 
+    @Column(columnDefinition = "Decimal(1,1) default '0.0'")
+    private Double averageVote;
+
 }

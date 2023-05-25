@@ -99,6 +99,8 @@
                 <hr>
                 <div class="text-center">
                     <a th:href="@{'/movie/edit/'+ ${movie.id}}" class="btn btn-primary">Modifica Film</a>
+                    <a th:href="@{'/movie/editActors/'+ ${movie.id}}" class="btn btn-primary">Modifica Attori</a>
+                    <a th:href="@{'/movie/editDirector/'+ ${movie.id}}" class="btn btn-primary">Modifica Regista</a>
                     <form th:action="@{/movie/delete}" method="post" th:object="${movie}">
                         <input type="hidden" th:field="*{id}"/>
                         <button type="submit" class="btn btn-danger" id="deleteEntity">Elimina</button>
