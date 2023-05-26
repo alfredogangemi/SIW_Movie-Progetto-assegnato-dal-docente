@@ -3,8 +3,10 @@ package it.uniroma3.siw.controller;
 
 import it.uniroma3.siw.controller.validator.ImageValidator;
 import it.uniroma3.siw.controller.validator.MovieValidator;
+import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.ImageData;
 import it.uniroma3.siw.model.Movie;
+import it.uniroma3.siw.service.ArtistService;
 import it.uniroma3.siw.service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +25,15 @@ import java.time.LocalDateTime;
 public class MovieController {
     private final Logger logger = LoggerFactory.getLogger(ArtistController.class);
     private final MovieService movieService;
+    private final ArtistService artistService;
     private final MovieValidator movieValidator;
     private final ImageValidator imageValidator;
 
 
     @Autowired
-    public MovieController(MovieService movieService, MovieValidator movieValidator, ImageValidator imageValidator) {
+    public MovieController(MovieService movieService, ArtistService artistService, MovieValidator movieValidator, ImageValidator imageValidator) {
         this.movieService = movieService;
+        this.artistService = artistService;
         this.movieValidator = movieValidator;
         this.imageValidator = imageValidator;
     }
@@ -82,8 +86,8 @@ public class MovieController {
     }
 
     @GetMapping("/movie/{id}")
-    public String getArtist(@PathVariable("id") Long id, Model model) {
-        Movie movie = movieService.findArtistById(id);
+    public String movie(@PathVariable("id") Long id, Model model) {
+        Movie movie = movieService.findMovieById(id);
         if (movie != null) {
             model.addAttribute("movie", movie);
             if (movie.getCover() != null) {
@@ -101,4 +105,23 @@ public class MovieController {
         model.addAttribute("movies", movies);
         return "searchMovie";
     }
+
+
+    @GetMapping(value = "/admin/setDirectorToMovie/{directorId}/{movieId}")
+    public String setDirectorToMovie(@PathVariable("directorId") Long directorId, @PathVariable("movieId") Long movieId, Model model) {
+        Artist director = artistService.findArtistById(directorId);
+        Movie movie = movieService.findMovieById(movieId);
+        movie.setDirector(director);
+        movieService.save(movie);
+        return "redirect:/movie/" + movieId;
+    }
+
+
+    @GetMapping(value = "/admin/addDirector/{id}")
+    public String addDirector(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("artists", artistService.getAll());
+        model.addAttribute("movie", movieService.findMovieById(id));
+        return "admin/addDirectorToMovie";
+    }
+
 }

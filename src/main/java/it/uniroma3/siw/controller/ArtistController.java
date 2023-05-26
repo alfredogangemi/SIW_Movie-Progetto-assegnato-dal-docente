@@ -135,12 +135,12 @@ public class ArtistController {
 
 
     @PostMapping("/artist/delete")
-    public String delete(@ModelAttribute("id") Long id, BindingResult bindingResult) {
+    public String delete(@ModelAttribute("id") Long id) {
         if (id != null && artistService.existsById(id)) {
-            bindingResult.reject("artist.generic.error");
-            return "admin/formUpdateArtist";
+            artistService.deleteById(id);
+        } else {
+            logger.warn("Errore durante l'emininazione dell'artista con id {}", id);
         }
-        artistService.deleteById(id);
         return "redirect:/";
     }
 

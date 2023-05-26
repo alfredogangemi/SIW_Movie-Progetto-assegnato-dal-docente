@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
 public class HomeController {
 
     private final MovieService movieService;
@@ -21,7 +20,7 @@ public class HomeController {
         this.movieService = movieService;
     }
 
-    @GetMapping
+    @RequestMapping("/")
     public String home(Model model) {
         List<MoviePreviewDto> latestMovies = movieService.getLastMoviesPreviews();
         model.addAttribute("latestMovies", latestMovies);

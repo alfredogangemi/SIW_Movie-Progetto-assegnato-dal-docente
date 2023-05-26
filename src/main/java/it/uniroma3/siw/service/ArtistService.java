@@ -74,4 +74,8 @@ public class ArtistService {
     public boolean existsByNameAndSurnameAndDateOfBirth(Artist artist) {
         return artistRepository.existsByNameAndSurnameAndDateOfBirth(artist.getName(), artist.getSurname(), artist.getDateOfBirth());
     }
+
+    public Iterable<Artist> searchArtistsByNameOrSurname(String artistToSearch) {
+        return artistRepository.searchArtistsByNameOrSurname(artistToSearch);
+    }
 }

@@ -26,10 +26,16 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <strong>Regista: </strong>
+                        <span><strong>Regista: </strong></span>
+                        <span th:if="${movie.director != null}"
+                              th:text="${movie.director.name} + ' ' + ${movie.director.surname}">---</span>
+                        <span th:unless="${movie.director != null}"> Nessun regista impostato</span>
                     </div>
                     <div class="col-md-8">
-                        <p>TODO</p>
+                        <a th:if="${movie.director != null}" th:href="@{'/admin/addDirector/'+ ${movie.id}}">Modifica
+                            Regista</a>
+                        <a th:unless="${movie.director != null}" th:href="@{'/admin/addDirector/'+ ${movie.id}}">Aggiungi
+                            Regista</a>
                     </div>
                 </div>
                 <div class="row">
@@ -100,7 +106,6 @@
                 <div class="text-center">
                     <a th:href="@{'/movie/edit/'+ ${movie.id}}" class="btn btn-primary">Modifica Film</a>
                     <a th:href="@{'/movie/editActors/'+ ${movie.id}}" class="btn btn-primary">Modifica Attori</a>
-                    <a th:href="@{'/movie/editDirector/'+ ${movie.id}}" class="btn btn-primary">Modifica Regista</a>
                     <form th:action="@{/movie/delete}" method="post" th:object="${movie}">
                         <input type="hidden" th:field="*{id}"/>
                         <button type="submit" class="btn btn-danger" id="deleteEntity">Elimina</button>
