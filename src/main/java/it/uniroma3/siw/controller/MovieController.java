@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -134,50 +135,26 @@ public class MovieController {
 
 
 
-
-
-    /*
-    @GetMapping(value = "/admin/editMovieActors/{actorId}/{movieId}")
+    @GetMapping(value = "/admin/addActorToMovie/{actorId}/{movieId}")
     public String addActorToMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
-        Movie movie = movieService.findById(movieId)
-                .get();
-        Artist actor = this.artistRepository.findById(actorId)
-                .get();
+        Movie movie = movieService.findMovieById(movieId);
+        Artist actor = artistService.findArtistById(actorId);
         Set<Artist> actors = movie.getActors();
         actors.add(actor);
-        this.movieRepository.save(movie);
-
-        List<Artist> actorsToAdd = actorsToAdd(movieId);
-
-        model.addAttribute("movie", movie);
-        model.addAttribute("actorsToAdd", actorsToAdd);
-
-        return "admin/actorsToAdd.html";
+        movieService.save(movie);
+        return updateActors(movieId, model);
     }
 
-    @GetMapping(value="/admin/removeActorFromMovie/{actorId}/{movieId}")
+    @GetMapping(value = "/admin/removeActorFromMovie/{actorId}/{movieId}")
     public String removeActorFromMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
-        Movie movie = this.movieRepository.findById(movieId).get();
-        Artist actor = this.artistRepository.findById(actorId).get();
+        Movie movie = movieService.findMovieById(movieId);
+        Artist actor = artistService.findArtistById(actorId);
         Set<Artist> actors = movie.getActors();
         actors.remove(actor);
-        this.movieRepository.save(movie);
-
-        List<Artist> actorsToAdd = actorsToAdd(movieId);
-
-        model.addAttribute("movie", movie);
-        model.addAttribute("actorsToAdd", actorsToAdd);
-
-        return "admin/actorsToAdd.html";
+        movieService.save(movie);
+        return updateActors(movieId, model);
     }
 
-    private List<Artist> actorsToAdd(Long movieId) {
-        List<Artist> actorsToAdd = new ArrayList<>();
 
-        for (Artist a : artistRepository.findActorsNotInMovie(movieId)) {
-            actorsToAdd.add(a);
-        }
-        return actorsToAdd;
-    }*/
 
 }

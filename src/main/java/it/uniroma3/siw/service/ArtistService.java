@@ -80,7 +80,4 @@ public class ArtistService {
         return artistRepository.findActorsNotInMovie(movieId);
     }
 
-    public Iterable<Artist> searchArtistsByNameOrSurname(String artistToSearch) {
-        return artistRepository.searchArtistsByNameOrSurname(artistToSearch);
-    }
 }
