@@ -32,9 +32,8 @@
                         <span th:unless="${movie.director != null}"> Nessun regista impostato</span>
                     </div>
                     <div class="col-md-8">
-                        <a th:if="${movie.director != null}" th:href="@{'/admin/addDirector/'+ ${movie.id}}">Modifica
-                            Regista</a>
-                        <a th:unless="${movie.director != null}" th:href="@{'/admin/addDirector/'+ ${movie.id}}">Aggiungi
+                        <a th:href="@{'/admin/addDirector/'+ ${movie.id}}"
+                           th:text="${movie.director != null ? 'Modifica Regista' : 'Aggiungi Regista'}">Aggiungi/Modifica
                             Regista</a>
                     </div>
                 </div>
@@ -50,6 +49,9 @@
                                 </a>
                             </li>
                         </ul>
+                        <a th:href="@{'/admin/updateActors/'+ ${movie.id}}"
+                           th:text="${movie.actors.size() == 0 ? 'Aggiungi Attori' : 'Modifica Attori'}">Aggiungi/Modifica
+                            Attori</a>
                     </div>
                 </div>
                 <div class="row">
@@ -105,7 +107,6 @@
                 <hr>
                 <div class="text-center">
                     <a th:href="@{'/movie/edit/'+ ${movie.id}}" class="btn btn-primary">Modifica Film</a>
-                    <a th:href="@{'/movie/editActors/'+ ${movie.id}}" class="btn btn-primary">Modifica Attori</a>
                     <form th:action="@{/movie/delete}" method="post" th:object="${movie}">
                         <input type="hidden" th:field="*{id}"/>
                         <button type="submit" class="btn btn-danger" id="deleteEntity">Elimina</button>

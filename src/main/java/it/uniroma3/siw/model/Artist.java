@@ -31,9 +31,9 @@ public class Artist {
     private ImageData image;
 
     @OneToMany
-    private Set<Movie> direction;
+    private Set<Movie> directedMovies;
 
     @ManyToMany
-    private Set<Movie> filmography;
+    private Set<Movie> starredMovies;
 
 }

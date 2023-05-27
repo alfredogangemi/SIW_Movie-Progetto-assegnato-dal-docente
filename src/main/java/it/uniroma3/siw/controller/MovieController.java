@@ -8,8 +8,7 @@ import it.uniroma3.siw.model.ImageData;
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.service.ArtistService;
 import it.uniroma3.siw.service.MovieService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Controller
 public class MovieController {
-    private final Logger logger = LoggerFactory.getLogger(ArtistController.class);
     private final MovieService movieService;
     private final ArtistService artistService;
     private final MovieValidator movieValidator;
@@ -43,7 +42,7 @@ public class MovieController {
     @GetMapping(value = "/createNewMovie")
     public String formNewArtist(Model model) {
         model.addAttribute("movie", new Movie());
-        logger.info("Redirecting to form new movie");
+        log.info("Redirecting to form new movie");
         return "formNewMovie";
     }
 
@@ -73,11 +72,11 @@ public class MovieController {
             }
             movieService.save(movie);
         } catch (IOException ioex) {
-            logger.error("Errore nella gestione degli allegati del film", ioex);
+            log.error("Errore nella gestione degli allegati del film", ioex);
             bindingResult.reject("image.upload.generic.error");
             return "formNewMovie";
         } catch (Exception ex) {
-            logger.error("Errore generico durante la creazione del film", ex);
+            log.error("Errore generico durante la creazione del film", ex);
             bindingResult.reject("movie.generic.error");
             return "formNewMovie";
         }
@@ -109,6 +108,7 @@ public class MovieController {
 
     @GetMapping(value = "/admin/setDirectorToMovie/{directorId}/{movieId}")
     public String setDirectorToMovie(@PathVariable("directorId") Long directorId, @PathVariable("movieId") Long movieId, Model model) {
+        log.info("Adding director {} to movie {}", directorId, movieId);
         Artist director = artistService.findArtistById(directorId);
         Movie movie = movieService.findMovieById(movieId);
         movie.setDirector(director);
@@ -123,5 +123,61 @@ public class MovieController {
         model.addAttribute("movie", movieService.findMovieById(id));
         return "admin/addDirectorToMovie";
     }
+
+
+    @GetMapping("/admin/updateActors/{id}")
+    public String updateActors(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("actorsToAdd", artistService.retrieveArtistsNotInMovie(id));
+        model.addAttribute("movie", movieService.findMovieById(id));
+        return "admin/updateActors";
+    }
+
+
+
+
+
+    /*
+    @GetMapping(value = "/admin/editMovieActors/{actorId}/{movieId}")
+    public String addActorToMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
+        Movie movie = movieService.findById(movieId)
+                .get();
+        Artist actor = this.artistRepository.findById(actorId)
+                .get();
+        Set<Artist> actors = movie.getActors();
+        actors.add(actor);
+        this.movieRepository.save(movie);
+
+        List<Artist> actorsToAdd = actorsToAdd(movieId);
+
+        model.addAttribute("movie", movie);
+        model.addAttribute("actorsToAdd", actorsToAdd);
+
+        return "admin/actorsToAdd.html";
+    }
+
+    @GetMapping(value="/admin/removeActorFromMovie/{actorId}/{movieId}")
+    public String removeActorFromMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
+        Movie movie = this.movieRepository.findById(movieId).get();
+        Artist actor = this.artistRepository.findById(actorId).get();
+        Set<Artist> actors = movie.getActors();
+        actors.remove(actor);
+        this.movieRepository.save(movie);
+
+        List<Artist> actorsToAdd = actorsToAdd(movieId);
+
+        model.addAttribute("movie", movie);
+        model.addAttribute("actorsToAdd", actorsToAdd);
+
+        return "admin/actorsToAdd.html";
+    }
+
+    private List<Artist> actorsToAdd(Long movieId) {
+        List<Artist> actorsToAdd = new ArrayList<>();
+
+        for (Artist a : artistRepository.findActorsNotInMovie(movieId)) {
+            actorsToAdd.add(a);
+        }
+        return actorsToAdd;
+    }*/
 
 }
