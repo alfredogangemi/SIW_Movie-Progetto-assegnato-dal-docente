@@ -35,20 +35,25 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-8">
-                        <img th:src="${image}" style="max-width: 100%" alt="...">
+                        <img th:src="${image}" style="max-width: 100%" alt="..." src="">
                     </div>
                     <div class="col-md-8" th:unless="${image}">
                         <p>Nessuna foto presente.</p>
                     </div>
                 </div>
                 <hr>
-                <div class="text-center">
-                    <a th:href="@{'/artist/edit/'+ ${artist.id}}" class="btn btn-primary">Modifica artista</a>
-                    <form th:action="@{/artist/delete}" method="post" th:object="${artist}">
-                        <input type="hidden" th:field="*{id}"/>
-                        <button type="submit" class="btn btn-danger" id="deleteEntity">Elimina</button>
-                    </form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <a th:href="@{'/artist/edit/'+ ${artist.id}}" class="btn btn-primary">Modifica artista</a>
+                    </div>
+                    <div class="col-md-4">
+                        <form th:action="@{/artist/delete}" method="post" th:object="${artist}">
+                            <input type="hidden" th:field="*{id}"/>
+                            <button type="submit" class="btn btn-danger" id="deleteEntity">Elimina</button>
+                        </form>
+                    </div>
                 </div>
+                <div><br> <br> <br></div>
             </div>
         </div>
     </div>
