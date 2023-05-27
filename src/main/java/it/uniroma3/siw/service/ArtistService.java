@@ -42,6 +42,7 @@ public class ArtistService {
         artistRepository.save(artist);
     }
 
+    @Transactional
     public Artist findArtistById(Long id) {
         return artistRepository.findById(id)
                 .orElse(null);
@@ -50,6 +51,7 @@ public class ArtistService {
     public Iterable<Artist> getAll() {
         return artistRepository.findAll();
     }
+
 
     public void deleteById(Long id) {
         logger.info("Deleting artist with id {}", id);
@@ -63,6 +65,7 @@ public class ArtistService {
     }
 
 
+    @Transactional
     public void saveWithPresentImage(Artist artist) {
         Artist persistedArtist = artistRepository.findById(artist.getId())
                 .get();

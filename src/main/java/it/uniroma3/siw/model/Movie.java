@@ -43,4 +43,18 @@ public class Movie {
     @Column(columnDefinition = "Decimal(1,1) default '0.0'")
     private Double averageVote;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Movie movie)) {
+            return false;
+        }
+        return movie.getId()
+                .equals(this.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode() + title.hashCode() + year.hashCode();
+    }
+
 }

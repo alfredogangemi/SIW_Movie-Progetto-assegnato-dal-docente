@@ -5,7 +5,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Data
@@ -30,10 +29,17 @@ public class Artist {
     @OneToOne(cascade = {CascadeType.ALL})
     private ImageData image;
 
-    @OneToMany
-    private Set<Movie> directedMovies;
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Artist artist)) {
+            return false;
+        }
+        return artist.getId()
+                .equals(this.getId());
+    }
 
-    @ManyToMany
-    private Set<Movie> starredMovies;
-
+    @Override
+    public int hashCode() {
+        return id.hashCode() + name.hashCode() + surname.hashCode();
+    }
 }

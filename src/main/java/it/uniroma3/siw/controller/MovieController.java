@@ -110,8 +110,8 @@ public class MovieController {
     @GetMapping(value = "/admin/setDirectorToMovie/{directorId}/{movieId}")
     public String setDirectorToMovie(@PathVariable("directorId") Long directorId, @PathVariable("movieId") Long movieId, Model model) {
         log.info("Adding director {} to movie {}", directorId, movieId);
-        Artist director = artistService.findArtistById(directorId);
         Movie movie = movieService.findMovieById(movieId);
+        Artist director = artistService.findArtistById(directorId);
         movie.setDirector(director);
         movieService.save(movie);
         return "redirect:/movie/" + movieId;

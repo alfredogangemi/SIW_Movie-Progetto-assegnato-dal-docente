@@ -30,6 +30,7 @@ public class MovieService {
         return movieRepository.existsByTitleAndYear(movie.getTitle(), movie.getYear());
     }
 
+    @Transactional
     public void save(Movie movie) {
         logger.info("Saving new movie:  {}", movie.getTitle());
         movieRepository.save(movie);
