@@ -21,7 +21,7 @@
                         <strong>Data di nascita:</strong>
                     </div>
                     <div class="col-md-8">
-                        <span th:text="${artist.dateOfBirth}">Data di nascita Artista</span>
+                        <span th:text="${#temporals.format(artist.dateOfBirth, 'dd/MM/yyyy')}">Data di nascita</span>
                     </div>
                 </div>
                 <div class="row" th:if="${artist.dateOfDeath != null}">
@@ -29,7 +29,7 @@
                         <strong>Data di morte:</strong>
                     </div>
                     <div class="col-md-8">
-                        <span th:text="${artist.dateOfDeath}">Data di morte Artista</span>
+                        <span th:text="${#temporals.format(artist.dateOfDeath, 'dd/MM/yyyy')}">Data di morte Artista</span>
                     </div>
                 </div>
                 <div class="row">
