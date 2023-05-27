@@ -47,7 +47,8 @@
                         <strong>Attori:</strong>
                     </div>
                     <div class="col-md-4">
-                        <table>
+                        <span th:if="${movie.actors.size() == 0}"> Nessun attore impostato</span>
+                        <table th:unless="${movie.actors.size() == 0}">
                             <tbody>
                             <tr th:each="actor : ${movie.actors}">
                                 <td>
