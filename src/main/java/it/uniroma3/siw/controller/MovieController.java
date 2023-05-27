@@ -108,7 +108,7 @@ public class MovieController {
 
 
     @GetMapping(value = "/admin/setDirectorToMovie/{directorId}/{movieId}")
-    public String setDirectorToMovie(@PathVariable("directorId") Long directorId, @PathVariable("movieId") Long movieId, Model model) {
+    public String setDirectorToMovie(@PathVariable("directorId") Long directorId, @PathVariable("movieId") Long movieId) {
         log.info("Adding director {} to movie {}", directorId, movieId);
         Movie movie = movieService.findMovieById(movieId);
         Artist director = artistService.findArtistById(directorId);
@@ -132,8 +132,6 @@ public class MovieController {
         model.addAttribute("movie", movieService.findMovieById(id));
         return "admin/updateActors";
     }
-
-
 
     @GetMapping(value = "/admin/addActorToMovie/{actorId}/{movieId}")
     public String addActorToMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {

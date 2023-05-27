@@ -36,6 +36,7 @@ public class MovieService {
         movieRepository.save(movie);
     }
 
+    @Transactional
     public Movie findMovieById(Long id) {
         return movieRepository.findById(id)
                 .orElse(null);
@@ -53,5 +54,6 @@ public class MovieService {
                 .forEach(movie -> latestMovies.add(new MoviePreviewDto(movie)));
         return latestMovies;
     }
+
 
 }

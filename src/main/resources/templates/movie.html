@@ -24,32 +24,43 @@
                     <div class="col-md-8">
                     </div>
                 </div>
+                <hr>
                 <div class="row">
                     <div class="col-md-4">
                         <span><strong>Regista: </strong></span>
-                        <span th:if="${movie.director != null}"
-                              th:text="${movie.director.name} + ' ' + ${movie.director.surname}">---</span>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:if="${movie.director != null}" th:href="@{'/artist/' + ${movie.director.id}}">
+                            <span th:text="${movie.director.name} + ' ' + ${movie.director.surname}"></span>
+                        </a>
                         <span th:unless="${movie.director != null}"> Nessun regista impostato</span>
                     </div>
-                    <div class="col-md-8">
-                        <a th:href="@{'/admin/addDirector/'+ ${movie.id}}"
+                    <div class="col-md-4">
+                        <a class="btn btn-default" th:href="@{'/admin/addDirector/'+ ${movie.id}}"
                            th:text="${movie.director != null ? 'Modifica Regista' : 'Aggiungi Regista'}">Aggiungi/Modifica
                             Regista</a>
                     </div>
                 </div>
+                <hr>
                 <div class="row">
                     <div class="col-md-4">
                         <strong>Attori:</strong>
                     </div>
-                    <div class="col-md-8">
-                        <ul>
-                            <li th:each="actor : ${movie.actors}">
-                                <a th:href="@{'/artist/' + ${actor.id}}">
-                                    <span th:text="${actor.name} + ' ' + ${actor.surname}"></span>
-                                </a>
-                            </li>
-                        </ul>
-                        <a th:href="@{'/admin/updateActors/'+ ${movie.id}}"
+                    <div class="col-md-4">
+                        <table>
+                            <tbody>
+                            <tr th:each="actor : ${movie.actors}">
+                                <td>
+                                    <a th:href="@{'/artist/' + ${actor.id}}">
+                                        <span th:text="${actor.name} + ' ' + ${actor.surname}"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-default" th:href="@{'/admin/updateActors/'+ ${movie.id}}"
                            th:text="${movie.actors.size() == 0 ? 'Aggiungi Attori' : 'Modifica Attori'}">Aggiungi/Modifica
                             Attori</a>
                     </div>

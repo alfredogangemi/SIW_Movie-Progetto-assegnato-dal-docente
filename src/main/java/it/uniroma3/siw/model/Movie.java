@@ -33,7 +33,7 @@ public class Movie {
     @ManyToOne
     private Artist director;
 
-    @ManyToMany(mappedBy = "starredMovies")
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Artist> actors;
 
     @OneToMany(cascade = {CascadeType.REMOVE})
