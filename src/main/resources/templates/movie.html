@@ -5,6 +5,7 @@
     <title>Film</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
 </head>
 
@@ -96,22 +97,20 @@
                 <div class="reviews-section">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="review-card border">
-                                <h4><strong>Titolo della recensione</strong></h4>
-                                <p>Voto: 4</p>
-                                <p>Testo della recensione</p>
-                                <p>Utente: Nome utente</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="review-card border">
-                                <h4><strong>Titolo della recensione</strong></h4>
-                                <p>Voto: 5</p>
-                                <p>Testo della recensione</p>
-                                <p>Utente: Nome utente</p>
+                            <div class="card-review">
+                                <div class="review-first-sub-card">
+                                    <h4 class="review-card-title">Titolo recensione
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star"></span>
+                                        <span class="fa fa-star"></span>
+                                    </h4>
+                                </div>
+                                <div class="review-second-sub-card">
+                                    <p class="review-text">Contenuto della recensione</p>
+                                    <a href="#">Elimina</a>
+                                </div>
                             </div>
                         </div>
                     </div>
