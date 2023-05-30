@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+    <title>Inserisci un nuovo Film</title>
+</head>
+<header th:replace="~{fragments/header :: header}"></header>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <h3>Inserisci una nuova recesnione</h3>
+            <form th:action="@{/newMovie}" method="POST" th:object="${review}">
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
+                </div>
+                <div class="form-group">
+                    <label for="title">Titolo</label>
+                    <input type="text" class="form-control" id="title" placeholder="Titolo" th:field="${review.title}">
+                </div>
+                <label for="review-rating">Voto:</label>
+                <select class="form-control" id="review-rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <div class="form-group">
+                    <label for="review-text">Recensione</label>
+                    <textarea class="form-control" id="review-text" rows="5"
+                              placeholder="Inserisci il testo della recensione" th:field="${review.text}"></textarea>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary btn-submit">Salva</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
