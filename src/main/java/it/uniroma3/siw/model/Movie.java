@@ -35,7 +35,7 @@ public class Movie {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Artist> actors;
 
-    @OneToMany(cascade = {CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "movie_id")
     private Set<Review> reviews;
 
