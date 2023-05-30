@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,7 +37,7 @@ public class Movie {
 
     @OneToMany(cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "movie_id")
-    private List<Review> reviews;
+    private Set<Review> reviews;
 
     @Column(columnDefinition = "Decimal(1,1) default '0.0'")
     private Double averageVote;
