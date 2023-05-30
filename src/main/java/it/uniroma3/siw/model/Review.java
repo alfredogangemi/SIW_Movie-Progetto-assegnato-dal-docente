@@ -19,7 +19,7 @@ public class Review {
     private Integer vote;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private Integer text;
+    private String text;
 
     @Column(nullable = false)
     private LocalDateTime creationDate;
