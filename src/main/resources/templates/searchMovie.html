@@ -12,18 +12,16 @@
 <body>
 <div class="container mt-4">
     <div class="form-group mx-sm-3 mb-2 text-right">
-        <form class="form-inline" action="#" th:action="@{/searchMovie}" method="get">
-            <div class="form-group mx-sm-3 mb-2">
-                <label for="searchInput" class="sr-only">Search</label>
-                <input type="text" class="form-control" id="searchInput" placeholder="Cerca un artista" name="name">
-            </div>
-            <button type="submit" class="btn btn-primary mb-2">Cerca</button>
-        </form>
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="searchInput" class="sr-only">Search</label>
+            <input type="text" class="form-control" onkeyup="filterTable('movieTable')" id="searchInput"
+                   placeholder="Cerca un film">
+        </div>
     </div>
     <div th:if="${movies.isEmpty()}">
         <p>Nessun risultato trovato.</p>
     </div>
-    <table class="table mt-4" th:unless="${movies.isEmpty()}">
+    <table id="movieTable" class="table mt-4" th:unless="${movies.isEmpty()}">
         <thead class="thead-light">
         <tr>
             <th scope="col">Titolo</th>
@@ -48,4 +46,5 @@
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/filterTable.js"></script>
 </html>
