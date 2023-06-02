@@ -77,14 +77,10 @@
                 <div th:if="${movie.images.size() > 0}" id="carouselExample" class="carousel slide"
                      data-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="item active">
-                            <img src="https://via.placeholder.com/800x400?text=Slide+1" alt="Slide 1">
-                        </div>
-                        <div class="item">
-                            <img src="https://via.placeholder.com/800x400?text=Slide+2" alt="Slide 2">
-                        </div>
-                        <div class="item">
-                            <img src="https://via.placeholder.com/800x400?text=Slide+3" alt="Slide 3">
+                        <div th:each="image, iterStat : ${movie.images}" class="item"
+                             th:classappend="${iterStat.index == 0 ? 'active' : ''}">
+                            <img th:src="${image.generateHtmlSource()}" alt="Slide"
+                                 th:alt="${'Slide ' + (iterStat.index + 1)}">
                         </div>
                     </div>
                     <a class="left carousel-control" href="#carouselExample" role="button" data-slide="prev">
