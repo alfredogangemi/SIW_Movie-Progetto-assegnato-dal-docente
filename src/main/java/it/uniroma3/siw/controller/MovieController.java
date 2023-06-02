@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
@@ -77,15 +78,16 @@ public class MovieController {
                 movie.setCover(image);
             }
             if (images != null) {
+                Set<ImageData> movieImages = new HashSet<>();
                 for (MultipartFile image : images) {
                     ImageData imageData = ImageData.builder()
                             .name(image.getOriginalFilename())
                             .content(image.getBytes())
                             .type(image.getContentType())
                             .build();
-                    movie.getImages()
-                            .add(imageData);
+                    movieImages.add(imageData);
                 }
+                movie.setImages(movieImages);
             }
             movieService.save(movie);
         } catch (IOException ioex) {
@@ -106,10 +108,6 @@ public class MovieController {
         Movie movie = movieService.findMovieById(id);
         if (movie != null) {
             model.addAttribute("movie", movie);
-            if (movie.getCover() != null) {
-                model.addAttribute("image", movie.getCover()
-                        .generateHtmlSource());
-            }
         }
         return "movie";
     }

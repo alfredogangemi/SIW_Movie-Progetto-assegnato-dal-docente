@@ -67,9 +67,10 @@
                             Attori</a>
                     </div>
                 </div>
+                <hr>
                 <div class="row">
                     <div class="col-md-12">
-                        <img th:src="${image}" style="max-width: 100%" alt="Copertina">
+                        <img th:src="${movie.getCover().generateHtmlSource()}" style="max-width: 100%" alt="Copertina">
                     </div>
                 </div>
                 <hr>
@@ -103,16 +104,15 @@
                             recensione</a>
                     </div>
                 </div>
-                <div th:if="${movie.reviews.size() > 0}" class="reviews-section">
-                    <div class="row review-row" th:each="review : ${movie.reviews}">
+                <div th:if="${movie.reviews.size() > 0}" th:each="review : ${movie.reviews}" class="reviews-section">
+                    <div class="row review-row">
                         <div class="col-md-12">
                             <div class="card-review">
                                 <div class="review-first-sub-card">
                                     <h4 th:text="${review.title}" class="review-card-title"></h4>
                                     <p th:each="i : ${#numbers.sequence(1, review.vote)}"
                                        class="fa fa-star checked"></p>
-                                    <p th:if="${review.vote} < 5"
-                                       th:each="i : ${#numbers.sequence(1, 5 - review.vote)}"
+                                    <p th:if="${review.vote} < 5" th:each="i : ${#numbers.sequence(1, 5 - review.vote)}"
                                        class="fa fa-star"></p>
                                 </div>
                                 <div class="review-second-sub-card">
@@ -121,6 +121,7 @@
                             </div>
                         </div>
                     </div>
+                    <div style="height: 20px;"></div>
                 </div>
                 <hr>
                 <div class="text-center">
