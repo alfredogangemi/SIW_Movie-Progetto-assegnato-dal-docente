@@ -35,7 +35,7 @@
     <div class="form-group mx-sm-3 mb-2 text-right">
         <div class="form-group mx-sm-3 mb-2">
             <label for="searchInput" class="sr-only">Search</label>
-            <input type="text" class="form-control" onkeyup="filterTable()" id="searchInput"
+            <input type="text" class="form-control" onkeyup="filterTable('artistTable')" id="searchInput"
                    placeholder="Cerca un regista">
         </div>
     </div>
@@ -62,25 +62,5 @@
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
-    function filterTable() {
-        let input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("searchInput");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("artistTable");
-        tr = table.getElementsByTagName("tr");
-
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-</script>
+<script src="/js/filterTable.js"></script>
 </html>
