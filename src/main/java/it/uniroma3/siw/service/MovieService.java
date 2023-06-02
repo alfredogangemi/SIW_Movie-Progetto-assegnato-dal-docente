@@ -56,4 +56,14 @@ public class MovieService {
     }
 
 
+
+    @Transactional
+    public List<MoviePreviewDto> getTopRatedMovies() {
+        List<MoviePreviewDto> topRatedMovies = new LinkedList<>();
+        movieRepository.findTopRatedMovies()
+                .forEach(movie -> topRatedMovies.add(new MoviePreviewDto(movie)));
+        return topRatedMovies;
+    }
+
+
 }

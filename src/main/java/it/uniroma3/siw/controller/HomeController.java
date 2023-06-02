@@ -23,8 +23,9 @@ public class HomeController {
     @RequestMapping("/")
     public String home(Model model) {
         List<MoviePreviewDto> latestMovies = movieService.getLastMoviesPreviews();
+        List<MoviePreviewDto> topRatedMovies = movieService.getTopRatedMovies();
         model.addAttribute("latestMovies", latestMovies);
-        //TODO -> Aggiungere più votati
+        model.addAttribute("topRatedMovies", topRatedMovies);
         return "index";
     }
 
