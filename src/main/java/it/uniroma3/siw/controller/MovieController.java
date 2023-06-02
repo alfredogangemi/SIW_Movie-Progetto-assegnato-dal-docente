@@ -48,28 +48,44 @@ public class MovieController {
     }
 
     @PostMapping("/newMovie")
-    public String createNewArtist(@Validated @ModelAttribute("movie") Movie movie, @RequestParam("coverFile") MultipartFile file, Model model,
+    public String createNewArtist(@Validated @ModelAttribute("movie") Movie movie, @RequestParam("coverImage") MultipartFile coverImage,
+            @RequestParam("imageFiles") MultipartFile[] images, Model model,
             BindingResult bindingResult) {
         movieValidator.validate(movie, bindingResult, true);
-        if (file != null && !file.isEmpty()) {
-            imageValidator.validate(file, bindingResult);
+        if (coverImage != null && !coverImage.isEmpty()) {
+            imageValidator.validate(coverImage, bindingResult);
         } else {
             bindingResult.reject("movie.empty.cover");
+        }
+        if (images != null) {
+            for (MultipartFile image : images) {
+                imageValidator.validate(image, bindingResult);
+            }
         }
         if (bindingResult.hasErrors()) {
             return "formNewMovie";
         }
-        //TODO -> Gestire altre immagini
         try {
             movie.setCreationDate(LocalDateTime.now());
             movie.setAverageVote(0.0D);
-            if (file != null) {
+            if (coverImage != null) {
                 ImageData image = ImageData.builder()
-                        .name(file.getOriginalFilename())
-                        .content(file.getBytes())
-                        .type(file.getContentType())
+                        .name(coverImage.getOriginalFilename())
+                        .content(coverImage.getBytes())
+                        .type(coverImage.getContentType())
                         .build();
                 movie.setCover(image);
+            }
+            if (images != null) {
+                for (MultipartFile image : images) {
+                    ImageData imageData = ImageData.builder()
+                            .name(image.getOriginalFilename())
+                            .content(image.getBytes())
+                            .type(image.getContentType())
+                            .build();
+                    movie.getImages()
+                            .add(imageData);
+                }
             }
             movieService.save(movie);
         } catch (IOException ioex) {
