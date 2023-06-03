@@ -24,18 +24,15 @@ public class ReviewValidator implements Validator {
     @Override
     public void validate(@NonNull Object o, @NonNull Errors errors) {
         Review review = (Review) o;
-        //TODO completare
-        //1. Controllo titolo
         if (StringUtils.isBlank(review.getTitle())) {
-
+            errors.reject("review.not.valid.title");
         } else if (review.getTitle()
-                .length() > 80) {
-
+                .length() > 100) {
+            errors.reject("review.title.too.long");
         }
-        //2. Contollo del testo della recensione
-        //3. Controllo del voto
-
-
+        if (StringUtils.isBlank(review.getText())) {
+            errors.reject("reviews.text.not.valid");
+        }
     }
 
     @Override
