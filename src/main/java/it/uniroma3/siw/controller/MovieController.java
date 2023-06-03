@@ -42,14 +42,14 @@ public class MovieController {
 
 
     @GetMapping(value = "/createNewMovie")
-    public String formNewArtist(Model model) {
+    public String formNewMovie(Model model) {
         model.addAttribute("movie", new Movie());
         log.info("Redirecting to form new movie");
         return "formNewMovie";
     }
 
     @PostMapping("/newMovie")
-    public String createNewArtist(@Validated @ModelAttribute("movie") Movie movie, @RequestParam("coverImage") MultipartFile coverImage,
+    public String createNewMovie(@Validated @ModelAttribute("movie") Movie movie, @RequestParam("coverImage") MultipartFile coverImage,
             @RequestParam("imageFiles") MultipartFile[] images, Model model,
             BindingResult bindingResult) {
         movieValidator.validate(movie, bindingResult, true);

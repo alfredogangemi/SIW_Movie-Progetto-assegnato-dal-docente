@@ -60,7 +60,7 @@ public class ReviewController {
     }
 
     @PostMapping("/deleteReview")
-    public String deleteReview(Model model) {
+    public String deleteReview() {
         return "index";
     }
 
