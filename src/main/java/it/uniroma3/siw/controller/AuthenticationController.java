@@ -70,17 +70,17 @@ public class AuthenticationController {
         return "index";
     }
 
-    @GetMapping(value = "/success")
-    public String defaultAfterLogin(Model model) {
+    @PostMapping(value = "/doLogin")
+    public String doLogin(Model model) {
+        log.info("Doing login...");
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
         Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-        if (credentials.getRole()
-                .equals(Credentials.ADMIN_ROLE)) {
-            return "admin/indexAdmin.html";
+        if (credentials != null) {
+            return "index";
         }
-        return "index.html";
+        return "login";
     }
 
     @PostMapping(value = {"/register"})
@@ -89,15 +89,14 @@ public class AuthenticationController {
             @ModelAttribute("credentials") Credentials credentials,
             BindingResult credentialsBindingResult,
             Model model) {
-
-        // se user e credential hanno entrambi contenuti validi, memorizza User e the Credentials nel DB
+        //TODO -> Validate user and credentials
         if (!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
             userService.saveUser(user);
             credentials.setUser(user);
             credentialsService.saveCredentials(credentials);
             model.addAttribute("user", user);
-            return "registrationSuccessful";
+            return "index"; //TODO -> Pagina di conferma
         }
-        return "registerUser";
+        return "signUp";
     }
 }

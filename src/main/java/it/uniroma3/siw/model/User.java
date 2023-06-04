@@ -5,14 +5,18 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "users") // cambiamo nome perchè in postgres user e' una parola riservata
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 
+    @Column(nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String surname;
+    @Column(nullable = false)
     private String email;
 
 
