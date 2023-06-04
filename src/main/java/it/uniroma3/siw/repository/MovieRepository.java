@@ -17,5 +17,8 @@ public interface MovieRepository extends CrudRepository<Movie, Long> {
             nativeQuery = true)
     List<Movie> findTopRatedMovies();
 
+    @Query(value = "SELECT AVG(r.vote) FROM review r WHERE r.movie_id = :movieId", nativeQuery = true)
+    Double getAverageRatingByMovieId(Long movieId);
+
 
 }
