@@ -34,10 +34,11 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-md-8">
-                        <img th:src="${image}" style="max-width: 100%" alt="..." src="">
+                    <div th:if="${artist.getImage() != null}" class="col-md-8">
+                        <img th:src="${artist.image.generateHtmlSource()}"
+                             style="max-width: 100%" alt="...">
                     </div>
-                    <div class="col-md-8" th:unless="${image}">
+                    <div th:unless="${artist.getImage() != null}" class="col-md-8">
                         <p>Nessuna foto presente.</p>
                     </div>
                 </div>

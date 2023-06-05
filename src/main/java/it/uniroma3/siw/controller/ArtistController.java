@@ -110,10 +110,6 @@ public class ArtistController {
         Artist artist = artistService.findArtistById(id);
         if (artist != null) {
             model.addAttribute("artist", artist);
-            if (artist.getImage() != null) {
-                model.addAttribute("image", artist.getImage()
-                        .generateHtmlSource());
-            }
         }
         return "artist";
     }

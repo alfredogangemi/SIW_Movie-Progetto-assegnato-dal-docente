@@ -40,18 +40,17 @@ public class MovieController {
     }
 
 
-
     @GetMapping(value = "/createNewMovie")
     public String formNewMovie(Model model) {
         model.addAttribute("movie", new Movie());
         log.info("Redirecting to form new movie");
-        return "formNewMovie";
+        return "admin/formNewMovie";
     }
 
     @PostMapping("/newMovie")
     public String createNewMovie(@Validated @ModelAttribute("movie") Movie movie, @RequestParam("coverImage") MultipartFile coverImage,
-            @RequestParam("imageFiles") MultipartFile[] images, Model model,
-            BindingResult bindingResult) {
+                                 @RequestParam("imageFiles") MultipartFile[] images, Model model,
+                                 BindingResult bindingResult) {
         movieValidator.validate(movie, bindingResult, true);
         if (coverImage != null && !coverImage.isEmpty()) {
             imageValidator.validate(coverImage, bindingResult);
@@ -64,7 +63,7 @@ public class MovieController {
             }
         }
         if (bindingResult.hasErrors()) {
-            return "formNewMovie";
+            return "admin/formNewMovie";
         }
         try {
             movie.setCreationDate(LocalDateTime.now());
@@ -93,11 +92,11 @@ public class MovieController {
         } catch (IOException ioex) {
             log.error("Errore nella gestione degli allegati del film", ioex);
             bindingResult.reject("image.upload.generic.error");
-            return "formNewMovie";
+            return "admin/formNewMovie";
         } catch (Exception ex) {
             log.error("Errore generico durante la creazione del film", ex);
             bindingResult.reject("movie.generic.error");
-            return "formNewMovie";
+            return "admin/formNewMovie";
         }
         model.addAttribute("movie", movie);
         return "redirect:/movie/" + movie.getId();
@@ -166,7 +165,6 @@ public class MovieController {
         movieService.save(movie);
         return updateActors(movieId, model);
     }
-
 
 
 }
