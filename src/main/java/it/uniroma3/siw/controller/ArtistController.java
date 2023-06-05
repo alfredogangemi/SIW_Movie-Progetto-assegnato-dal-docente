@@ -36,13 +36,13 @@ public class ArtistController {
     public String formNewArtist(Model model) {
         model.addAttribute("artist", new Artist());
         logger.info("Redirecting to form new artist");
-        return "formNewArtist";
+        return "admin/formNewArtist";
     }
 
 
     @PostMapping("/newArtist")
     public String createNewArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
-            BindingResult bindingResult) {
+                                  BindingResult bindingResult) {
         //1. Validazione dell'artista
         artistValidator.validate(artist, bindingResult, true);
         //2. Validazione dell'immagine se presente
@@ -50,18 +50,18 @@ public class ArtistController {
             imageValidator.validate(file, bindingResult);
         }
         if (bindingResult.hasErrors()) {
-            return "formNewArtist";
+            return "admin/formNewArtist";
         }
         try {
             artistService.save(artist, file);
         } catch (IOException ioex) {
             logger.error("Errore nella gestione dell'allegato nell'artista", ioex);
             bindingResult.reject("image.upload.generic.error");
-            return "formNewArtist";
+            return "admin/formNewArtist";
         } catch (Exception ex) {
             logger.error("Errore generico durante la creazione dell'artista", ex);
             bindingResult.reject("artist.generic.error");
-            return "formNewArtist";
+            return "admin/formNewArtist";
         }
         model.addAttribute("artist", artist);
         return "redirect:/artist/" + artist.getId();
@@ -70,7 +70,7 @@ public class ArtistController {
 
     @PostMapping("/updateArtist")
     public String updateArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
-            BindingResult bindingResult, @ModelAttribute("id") Long id) {
+                               BindingResult bindingResult, @ModelAttribute("id") Long id) {
         if (id != null && !artistService.existsById(id)) {
             bindingResult.reject("artist.generic.error");
             return "admin/formUpdateArtist";
@@ -93,7 +93,7 @@ public class ArtistController {
         } catch (IOException ioex) {
             logger.error("Errore nella gestione dell'allegato nell'artista", ioex);
             bindingResult.reject("image.upload.generic.error");
-            return "formNewArtist";
+            return "admin/formNewArtist";
         } catch (Exception ex) {
             logger.error("Errore generico durante l'aggiornamento dell'artista");
             ex.printStackTrace();
@@ -103,7 +103,6 @@ public class ArtistController {
         model.addAttribute("artist", artist);
         return "redirect:/artist/" + artist.getId();
     }
-
 
 
     @GetMapping("/artist/{id}")
@@ -143,7 +142,6 @@ public class ArtistController {
         }
         return "redirect:/";
     }
-
 
 
 }

@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row">
+                <div th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}" class="row">
                     <div class="col-md-4">
                         <a th:href="@{'/artist/edit/'+ ${artist.id}}" class="btn btn-primary">Modifica artista</a>
                     </div>

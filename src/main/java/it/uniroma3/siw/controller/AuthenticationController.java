@@ -70,25 +70,19 @@ public class AuthenticationController {
         return "index";
     }
 
-    @PostMapping(value = "/doLogin")
-    public String doLogin(Model model) {
-        log.info("Doing login...");
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+    @GetMapping(value = "/success")
+    public String defaultAfterLogin(Model model) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-        if (credentials != null) {
-            return "index";
-        }
-        return "login";
+        return index(model);
     }
 
     @PostMapping(value = {"/register"})
     public String registerUser(@ModelAttribute("user") User user,
-            BindingResult userBindingResult,
-            @ModelAttribute("credentials") Credentials credentials,
-            BindingResult credentialsBindingResult,
-            Model model) {
+                               BindingResult userBindingResult,
+                               @ModelAttribute("credentials") Credentials credentials,
+                               BindingResult credentialsBindingResult,
+                               Model model) {
         //TODO -> Validate user and credentials
         if (!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
             userService.saveUser(user);

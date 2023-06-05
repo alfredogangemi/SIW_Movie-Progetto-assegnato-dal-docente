@@ -20,10 +20,14 @@ import static it.uniroma3.siw.model.Credentials.ADMIN_ROLE;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration {
+public class AuthConfiguration {
+    private final DataSource dataSource;
+
 
     @Autowired
-    private DataSource dataSource;
+    public AuthConfiguration(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
@@ -45,7 +49,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
+    protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf()
                 .and()
