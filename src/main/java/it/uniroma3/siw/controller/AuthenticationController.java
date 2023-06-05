@@ -97,6 +97,6 @@ public class AuthenticationController {
         credentials.setUser(user);
         credentialsService.saveCredentials(credentials);
         model.addAttribute("user", user);
-        return "index";
+        return "signUpSuccessfully";
     }
 }
