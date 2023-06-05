@@ -15,7 +15,7 @@
         <div class="col-md-4 col-md-offset-4">
             <div class="login-form">
                 <h2>Accedi</h2>
-                <form action="/doLogin" method="post">
+                <form th:action="@{/login}" method="post">
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" class="form-control" required>
