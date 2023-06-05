@@ -1,5 +1,7 @@
 package it.uniroma3.siw.controller;
 
+import it.uniroma3.siw.controller.validator.CredentialsValidator;
+import it.uniroma3.siw.controller.validator.UserValidator;
 import it.uniroma3.siw.dto.MoviePreviewDto;
 import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.model.User;
@@ -23,15 +25,19 @@ import java.util.List;
 @Slf4j
 public class AuthenticationController {
 
-    private final CredentialsService credentialsService;
-    private final UserService userService;
-    private final MovieService movieService;
+    protected CredentialsService credentialsService;
+    protected UserService userService;
+    protected MovieService movieService;
+    protected UserValidator userValidator;
+    protected CredentialsValidator credentialsValidator;
 
     @Autowired
-    public AuthenticationController(MovieService movieService, UserService userService, CredentialsService credentialsService) {
+    public AuthenticationController(MovieService movieService, UserService userService, CredentialsService credentialsService, UserValidator userValidator, CredentialsValidator credentialsValidator) {
         this.movieService = movieService;
         this.userService = userService;
         this.credentialsService = credentialsService;
+        this.userValidator = userValidator;
+        this.credentialsValidator = credentialsValidator;
     }
 
     @GetMapping(value = "/signUp")
@@ -79,18 +85,18 @@ public class AuthenticationController {
 
     @PostMapping(value = {"/register"})
     public String registerUser(@ModelAttribute("user") User user,
-                               BindingResult userBindingResult,
+                               BindingResult bindingResult,
                                @ModelAttribute("credentials") Credentials credentials,
-                               BindingResult credentialsBindingResult,
                                Model model) {
-        //TODO -> Validate user and credentials
-        if (!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
-            userService.saveUser(user);
-            credentials.setUser(user);
-            credentialsService.saveCredentials(credentials);
-            model.addAttribute("user", user);
-            return "index"; //TODO -> Pagina di conferma
+        userValidator.validate(user, bindingResult);
+        credentialsValidator.validate(credentials, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "signUp";
         }
-        return "signUp";
+        userService.saveUser(user);
+        credentials.setUser(user);
+        credentialsService.saveCredentials(credentials);
+        model.addAttribute("user", user);
+        return "index";
     }
 }
