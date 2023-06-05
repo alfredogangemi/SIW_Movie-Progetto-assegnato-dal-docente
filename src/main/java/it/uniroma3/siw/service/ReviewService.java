@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewService {
 
 
-    private final ReviewRepository reviewRepository;
+    protected final ReviewRepository reviewRepository;
 
 
     @Autowired

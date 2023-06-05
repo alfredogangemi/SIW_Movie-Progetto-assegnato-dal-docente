@@ -3,8 +3,7 @@ package it.uniroma3.siw.service;
 import it.uniroma3.siw.dto.MoviePreviewDto;
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.repository.MovieRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,17 +12,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MovieService {
 
 
-    private final MovieRepository movieRepository;
-    private final Logger logger = LoggerFactory.getLogger(ArtistService.class);
+    protected final MovieRepository movieRepository;
 
     @Autowired
     public MovieService(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
-
 
 
     public boolean existsByTitleAndYear(Movie movie) {
@@ -32,7 +30,7 @@ public class MovieService {
 
     @Transactional
     public void save(Movie movie) {
-        logger.info("Saving new movie:  {}", movie.getTitle());
+        log.info("Saving new movie:  {}", movie.getTitle());
         movieRepository.save(movie);
     }
 
@@ -54,7 +52,6 @@ public class MovieService {
                 .forEach(movie -> latestMovies.add(new MoviePreviewDto(movie)));
         return latestMovies;
     }
-
 
 
     @Transactional
