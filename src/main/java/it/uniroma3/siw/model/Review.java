@@ -24,7 +24,7 @@ public class Review {
     @Column(nullable = false)
     private LocalDateTime creationDate;
 
-    //TODO Utente
+    private String username;
 
 
 }

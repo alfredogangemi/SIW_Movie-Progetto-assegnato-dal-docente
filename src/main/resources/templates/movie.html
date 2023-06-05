@@ -20,9 +20,12 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-4">
-                        <strong>Voto:</strong>
+                        <strong>Voto Medio:</strong>
                     </div>
                     <div class="col-md-8">
+                        <strong><span
+                                th:text="${#numbers.formatDecimal(movie.averageVote, 1, 1, 'COMMA')}"></span></strong>
+                        <p class="fa fa-star checked"></p>
                     </div>
                 </div>
                 <hr>
@@ -106,10 +109,13 @@
                             <div class="card-review">
                                 <div class="review-first-sub-card">
                                     <h4 th:text="${review.title}" class="review-card-title"></h4>
-                                    <p th:each="i : ${#numbers.sequence(1, review.vote)}"
-                                       class="fa fa-star checked"></p>
-                                    <p th:if="${review.vote} < 5" th:each="i : ${#numbers.sequence(1, 5 - review.vote)}"
-                                       class="fa fa-star"></p>
+                                    <div class="rating-stars">
+                                        <p th:each="i : ${#numbers.sequence(1, review.vote)}"
+                                           class="fa fa-star checked"></p>
+                                        <p th:if="${review.vote} < 5"
+                                           th:each="i : ${#numbers.sequence(1, 5 - review.vote)}"
+                                           class="fa fa-star"></p>
+                                    </div>
                                 </div>
                                 <div class="review-second-sub-card">
                                     <p th:text="${review.text}" class="review-text">Testo recensione</p>

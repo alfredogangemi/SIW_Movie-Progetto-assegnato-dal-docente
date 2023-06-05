@@ -1,6 +1,7 @@
 package it.uniroma3.siw.service;
 
 
+import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.model.Review;
 import it.uniroma3.siw.repository.ReviewRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,10 @@ public class ReviewService {
     @Transactional
     public void save(Review review) {
         reviewRepository.save(review);
+    }
+
+    public Double calculateAverageVote(Movie movie) {
+        return reviewRepository.calculateAverageRating(movie.getId());
     }
 
 }

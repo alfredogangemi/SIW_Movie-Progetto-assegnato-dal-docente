@@ -42,7 +42,7 @@ public class ReviewController {
 
     @PostMapping("/addReviewToMovie/{movieId}")
     public String addReviewToMovie(Model model, @ModelAttribute("review") Review review,
-            @PathVariable("movieId") Long movieId, BindingResult bindingResult) {
+                                   @PathVariable("movieId") Long movieId, BindingResult bindingResult) {
         reviewValidator.validate(review, bindingResult);
         if (bindingResult.hasErrors()) {
             return formNewReview(model, movieId);
@@ -55,6 +55,9 @@ public class ReviewController {
             movie.getReviews()
                     .add(review);
             movieService.save(movie);
+            Double averageVote = reviewService.calculateAverageVote(movie);
+            movie.setAverageVote(averageVote);
+            movieService.save(movie);
         }
         return "redirect:/movie/" + movieId;
     }
@@ -63,7 +66,6 @@ public class ReviewController {
     public String deleteReview() {
         return "index";
     }
-
 
 
 }
