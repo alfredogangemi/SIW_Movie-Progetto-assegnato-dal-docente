@@ -49,8 +49,8 @@ public class MovieController {
 
     @PostMapping("/newMovie")
     public String createNewMovie(@Validated @ModelAttribute("movie") Movie movie, @RequestParam("coverImage") MultipartFile coverImage,
-                                 @RequestParam("imageFiles") MultipartFile[] images, Model model,
-                                 BindingResult bindingResult) {
+            @RequestParam("imageFiles") MultipartFile[] images, Model model,
+            BindingResult bindingResult) {
         movieValidator.validate(movie, bindingResult, true);
         if (coverImage != null && !coverImage.isEmpty()) {
             imageValidator.validate(coverImage, bindingResult);
@@ -164,6 +164,17 @@ public class MovieController {
         actors.remove(actor);
         movieService.save(movie);
         return updateActors(movieId, model);
+    }
+
+
+    @PostMapping("/movie/delete")
+    public String delete(@ModelAttribute("id") Long id) {
+        if (id != null && movieService.existsById(id)) {
+            movieService.deleteById(id);
+        } else {
+            log.warn("Errore durante l'emininazione del film con id {}", id);
+        }
+        return "redirect:/";
     }
 
 

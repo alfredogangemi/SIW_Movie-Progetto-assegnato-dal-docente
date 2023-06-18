@@ -10,11 +10,12 @@
 <header th:replace="~{fragments/header :: header}"></header>
 
 <body>
-<div class="container">
+<div class="container flex-wrapper">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="login-form">
                 <h2>Accedi</h2>
+                <br>
                 <form th:action="@{/login}" method="post">
                     <div class="form-group">
                         <label for="username">Username</label>

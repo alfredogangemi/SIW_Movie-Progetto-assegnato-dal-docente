@@ -1,6 +1,14 @@
 @import url("header.css");
 @import url("footer.css");
 
+
+.flex-wrapper {
+    display: flex;
+    min-height: 65vh;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
 body {
     font-family: Arial, sans-serif;
     min-height: 400px;

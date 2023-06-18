@@ -42,7 +42,7 @@ public class ReviewController {
 
     @PostMapping("/addReviewToMovie/{movieId}")
     public String addReviewToMovie(Model model, @ModelAttribute("review") Review review,
-                                   @PathVariable("movieId") Long movieId, BindingResult bindingResult) {
+            @PathVariable("movieId") Long movieId, BindingResult bindingResult) {
         reviewValidator.validate(review, bindingResult);
         if (bindingResult.hasErrors()) {
             return formNewReview(model, movieId);
@@ -62,9 +62,20 @@ public class ReviewController {
         return "redirect:/movie/" + movieId;
     }
 
-    @PostMapping("/deleteReview")
-    public String deleteReview() {
-        return "index";
+    @GetMapping("/deleteReview/{reviewId}/{movieId}")
+    public String delete(@PathVariable("reviewId") Long reviewId, @PathVariable("movieId") Long movieId) {
+        if (reviewId != null && reviewService.existsById(reviewId)) {
+            reviewService.deleteById(reviewId);
+            Movie movie = movieService.findMovieById(movieId);
+            if (movie != null) {
+                Double averageVote = reviewService.calculateAverageVote(movie);
+                movie.setAverageVote(averageVote);
+                movieService.save(movie);
+            }
+        } else {
+            log.warn("Errore durante l'emininazione della recensione con id {}", reviewId);
+        }
+        return "redirect:/movie/" + movieId;
     }
 
 

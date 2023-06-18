@@ -31,4 +31,11 @@ public class ReviewService {
         return reviewRepository.calculateAverageRating(movie.getId());
     }
 
+    public boolean existsById(Long id) {
+        return reviewRepository.existsById(id);
+    }
+
+    public void deleteById(Long id) {
+        reviewRepository.deleteById(id);
+    }
 }

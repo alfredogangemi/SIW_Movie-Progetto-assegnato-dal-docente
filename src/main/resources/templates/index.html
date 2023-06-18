@@ -35,7 +35,7 @@
     <div class="row">
         <div class="card-home" th:each="movie : ${topRatedMovies}">
             <img th:src="${movie.getImageSrc()}" alt="...">
-            <a th:href="@{'movie/+'+ ${movie.id}}">
+            <a th:href="@{'movie/'+ ${movie.id}}">
                 <h3 class="card-title-home" th:text="${movie.getTitle()}">Titolo</h3>
             </a>
             <p class="card-subtitle" th:text="${'Voto: '+#numbers.formatDecimal(movie.vote, 1, 1, 'COMMA')}">
