@@ -117,8 +117,10 @@
                                            class="fa fa-star"></p>
                                     </div>
                                 </div>
-                                <div class="review-second-sub-card">
-                                    <p th:text="${review.text}" class="review-text">Testo recensione</p>
+                                <div class="review-second-sub-card review-text">
+                                    <p th:text="${review.text}">Testo recensione</p>
+                                    <cite style="font-weight: bold;"
+                                          th:text="${review.user.name} + ' ' + ${review.user.surname}">User</cite>
                                     <a th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}"
                                        th:href="@{'/deleteReview/' + ${review.id} +'/' + ${movie.id}}"
                                        class="btn btn btn-sm pull-right">Elimina</a>

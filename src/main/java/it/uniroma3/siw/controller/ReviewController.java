@@ -3,10 +3,14 @@ package it.uniroma3.siw.controller;
 import it.uniroma3.siw.controller.validator.ReviewValidator;
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.model.Review;
+import it.uniroma3.siw.model.User;
+import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.MovieService;
 import it.uniroma3.siw.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,12 +28,15 @@ public class ReviewController {
     private final MovieService movieService;
     private final ReviewValidator reviewValidator;
     private final ReviewService reviewService;
+    private final CredentialsService credentialsService;
 
     @Autowired
-    public ReviewController(MovieService movieService, ReviewValidator reviewValidator, ReviewService reviewService) {
+    public ReviewController(MovieService movieService, ReviewValidator reviewValidator, ReviewService reviewService,
+            CredentialsService credentialsService) {
         this.movieService = movieService;
         this.reviewValidator = reviewValidator;
         this.reviewService = reviewService;
+        this.credentialsService = credentialsService;
     }
 
     @GetMapping("/reviewMovie/{movieId}")
@@ -51,6 +58,12 @@ public class ReviewController {
         Movie movie = movieService.findMovieById(movieId);
         if (movie != null) {
             review.setCreationDate(LocalDateTime.now());
+            String username = ((UserDetails) SecurityContextHolder.getContext()
+                    .getAuthentication()
+                    .getPrincipal()).getUsername();
+            User user = credentialsService.getCredentials(username)
+                    .getUser();
+            review.setUser(user);
             reviewService.save(review);
             movie.getReviews()
                     .add(review);

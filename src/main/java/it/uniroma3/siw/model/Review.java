@@ -24,7 +24,8 @@ public class Review {
     @Column(nullable = false)
     private LocalDateTime creationDate;
 
-    private String username;
+    @OneToOne
+    private User user;
 
 
 }
