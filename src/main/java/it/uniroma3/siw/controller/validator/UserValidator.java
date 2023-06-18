@@ -27,20 +27,25 @@ public class UserValidator implements Validator {
         User user = (User) o;
         if (StringUtils.isBlank(user.getName())) {
             errors.reject("user.empty.name");
+            log.debug("User name is empty.");
             return;
         }
         if (StringUtils.isBlank(user.getSurname())) {
             errors.reject("user.empty.surname");
+            log.debug("User surname is empty.");
             return;
         }
         if (StringUtils.isBlank(user.getEmail())) {
             errors.reject("user.empty.email");
-        } else if (!EmailValidator.getInstance().isValid(user.getEmail())) {
+            log.debug("User email is empty.");
+        } else if (!EmailValidator.getInstance()
+                .isValid(user.getEmail())) {
             errors.reject("user.not.valid.email");
+            log.debug("User email is not valid.");
         } else if (userService.existsByEmail(user.getEmail())) {
             errors.reject("user.with.this.email.already.present");
+            log.debug("User with this email already exists.");
         }
-
     }
 
     @Override

@@ -22,22 +22,28 @@ public class CredentialsValidator implements Validator {
     }
 
     @Override
-    public void validate(@NonNull Object o, @NonNull Errors errors) {
-        Credentials credentials = (Credentials) o;
+    public void validate(Object target, Errors errors) {
+        Credentials credentials = (Credentials) target;
         if (StringUtils.isBlank(credentials.getUsername())) {
+            log.debug("Empty or null username provided");
             errors.reject("user.empty.username");
             return;
-        } else if (credentials.getUsername().length() < 5) {
+        } else if (credentials.getUsername()
+                .length() < 5) {
+            log.debug("Username is too short: {}", credentials.getUsername());
             errors.reject("user.username.too.short");
         } else if (credentialsService.existsByUsername(credentials.getUsername())) {
+            log.debug("Username {} already present", credentials.getUsername());
             errors.reject("user.username.already.present");
         }
         if (StringUtils.isBlank(credentials.getPassword())) {
+            log.debug("Empty or null password provided");
             errors.reject("user.empty.password");
-        } else if (credentials.getPassword().length() < 8) {
+        } else if (credentials.getPassword()
+                .length() < 8) {
+            log.debug("Password is too short");
             errors.reject("user.password.too.short");
         }
-
     }
 
     @Override

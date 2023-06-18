@@ -4,16 +4,15 @@ import io.micrometer.common.util.StringUtils;
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.service.MovieService;
 import lombok.NonNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
+@Slf4j
 public class MovieValidator implements Validator {
-    private final Logger logger = LoggerFactory.getLogger(ArtistValidator.class);
     private final MovieService movieService;
 
     @Autowired
@@ -22,6 +21,7 @@ public class MovieValidator implements Validator {
     }
 
     public void validate(@NonNull Object o, @NonNull Errors errors, boolean isNew) {
+        log.info("Starting validating movie. is new -> {}", isNew);
         validate(o, errors);
         if (isNew) {
             exist((Movie) o, errors);
@@ -32,16 +32,15 @@ public class MovieValidator implements Validator {
     @Override
     public void validate(@NonNull Object o, @NonNull Errors errors) {
         Movie movie = (Movie) o;
-        logger.debug("Starting validate new movie...");
         if (StringUtils.isBlank(movie.getTitle())) {
-            logger.debug("Not valid title..");
             errors.reject("movie.not.valid.title");
+            log.debug("Invalid movie title: {}", movie.getTitle());
         }
         Integer year = movie.getYear();
         if (year == null) {
             errors.reject("movie.not.valid.year");
+            log.debug("Invalid movie year: null");
         }
-
     }
 
     @Override

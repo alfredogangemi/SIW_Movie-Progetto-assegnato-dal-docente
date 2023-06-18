@@ -20,12 +20,16 @@ public class ImageValidator implements Validator {
 
 
     @Override
-    public void validate(@NonNull Object o, @NonNull Errors errors) {
-        MultipartFile file = (MultipartFile) o;
-        if (!isImage(file)) {
-            errors.reject("artist.upload.file.is.not.a.valid.image");
-        } else if (file.getSize() > maxImageFileSize) {
-            errors.reject("image.upload.file.exceeds.max.size");
+    public void validate(@NonNull Object target, @NonNull Errors errors) {
+        MultipartFile file = (MultipartFile) target;
+
+        if (!file.isEmpty()) {
+            // Checking if file is a valid image
+            if (!isImage(file)) {
+                errors.reject("artist.upload.file.is.not.a.valid.image");
+            } else if (file.getSize() > maxImageFileSize) {
+                errors.reject("image.upload.file.exceeds.max.size");
+            }
         }
     }
 
