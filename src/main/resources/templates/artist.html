@@ -34,7 +34,7 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div th:if="${artist.getImage() != null}" class="col-md-8">
+                    <div th:if="${artist.getImage() != null}" class="col-md-8 center-image">
                         <img th:src="${artist.image.generateHtmlSource()}"
                              style="max-width: 100%" alt="...">
                     </div>

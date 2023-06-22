@@ -135,6 +135,12 @@ body {
     color: orange;
 }
 
+.center-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 
 

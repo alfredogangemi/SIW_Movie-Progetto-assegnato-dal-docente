@@ -33,7 +33,7 @@ public class MovieService {
 
     @Transactional
     public void save(Movie movie) {
-        log.info("Saving new movie:  {}", movie.getTitle());
+        log.info("Saving movie:  {}", movie.getTitle());
         movieRepository.save(movie);
     }
 

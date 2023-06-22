@@ -3,7 +3,6 @@ package it.uniroma3.siw.service;
 
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.model.Review;
-import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.repository.ReviewRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public boolean existsByUser(User user) {
-        return reviewRepository.existsByUser(user);
+    public boolean existsByUserAndMovie(Long userId, Long movieId) {
+        return reviewRepository.countByUserIdAndMovieId(userId, movieId) > 0;
     }
 }

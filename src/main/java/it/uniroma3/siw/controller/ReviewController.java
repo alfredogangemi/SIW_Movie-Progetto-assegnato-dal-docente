@@ -44,7 +44,7 @@ public class ReviewController {
     public String formNewReview(Model model, @PathVariable("movieId") Long movieId, RedirectAttributes redirectAttributes) {
         User user = authenticationController.getCurrentUser();
         if (user != null) {
-            if (reviewService.existsByUser(user)) {
+            if (reviewService.existsByUserAndMovie(user.getId(), movieId)) {
                 log.warn("User has already reviewed the movie with ID {}", movieId);
                 redirectAttributes.addFlashAttribute("errorMessage", "Hai già recensito questo film.");
                 return "redirect:/movie/" + movieId;
