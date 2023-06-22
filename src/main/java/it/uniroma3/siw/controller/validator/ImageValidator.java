@@ -2,6 +2,7 @@ package it.uniroma3.siw.controller.validator;
 
 import it.uniroma3.siw.model.Artist;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 
 @Component
+@Slf4j
 public class ImageValidator implements Validator {
 
 
@@ -22,14 +24,19 @@ public class ImageValidator implements Validator {
     @Override
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         MultipartFile file = (MultipartFile) target;
-
         if (!file.isEmpty()) {
-            // Checking if file is a valid image
+            log.debug("Starting validation for file: {}.", file.getOriginalFilename());
             if (!isImage(file)) {
                 errors.reject("artist.upload.file.is.not.a.valid.image");
+                log.warn("Invalid image file detected: {}", file.getOriginalFilename());
             } else if (file.getSize() > maxImageFileSize) {
                 errors.reject("image.upload.file.exceeds.max.size");
+                log.warn("Image {} file size exceeds the maximum allowed size that is {}", file.getOriginalFilename(), maxImageFileSize);
+            } else {
+                log.debug("Validation successful for file: {}", file.getOriginalFilename());
             }
+        } else {
+            log.debug("Empty file received. Skipping validation.");
         }
     }
 

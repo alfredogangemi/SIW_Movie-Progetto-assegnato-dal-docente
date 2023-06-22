@@ -40,6 +40,9 @@ public class MovieValidator implements Validator {
         if (year == null) {
             errors.reject("movie.not.valid.year");
             log.debug("Invalid movie year: null");
+        } else if (year < 1900 || year > 2030) {
+            errors.reject("movie.not.valid.year");
+            log.debug("Invalid movie year: {}", year);
         }
     }
 
