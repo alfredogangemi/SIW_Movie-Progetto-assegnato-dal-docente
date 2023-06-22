@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("#deleteEntity").on("click", function (event) {
+    $(".deleteEntity").on("click", function (event) {
         event.preventDefault();
         const form = $(this).parents('form');
         swal.fire({

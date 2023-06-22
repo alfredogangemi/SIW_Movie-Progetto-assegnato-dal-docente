@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
             <h3>Inserisci un nuovo Film</h3>
-            <form th:action="@{/newMovie}" method="POST" th:object="${movie}" enctype="multipart/form-data">
+            <form th:action="@{/admin/newMovie}" method="POST" th:object="${movie}" enctype="multipart/form-data">
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
                 </div>

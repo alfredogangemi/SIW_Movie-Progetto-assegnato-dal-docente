@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
             <h3>Modifica Artista</h3>
-            <form th:action="@{/updateArtist}" method="POST" th:object="${artist}" enctype="multipart/form-data">
+            <form th:action="@{/admin/updateArtist}" method="POST" th:object="${artist}" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}"/>
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>

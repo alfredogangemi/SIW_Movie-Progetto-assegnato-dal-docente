@@ -36,7 +36,7 @@ public class ArtistController {
     }
 
 
-    @GetMapping(value = "/createNewArtist")
+    @GetMapping(value = "/admin/createNewArtist")
     public String formNewArtist(Model model) {
         model.addAttribute("artist", new Artist());
         log.info("Redirecting to form new artist");
@@ -44,7 +44,7 @@ public class ArtistController {
     }
 
 
-    @PostMapping("/newArtist")
+    @PostMapping("/admin/newArtist")
     public String createNewArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
             BindingResult bindingResult) {
         //1. Validazione dell'artista
@@ -76,7 +76,7 @@ public class ArtistController {
     }
 
 
-    @PostMapping("/updateArtist")
+    @PostMapping("/admin/updateArtist")
     public String updateArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
             BindingResult bindingResult, @ModelAttribute("id") Long id) {
         if (id != null && !artistService.existsById(id)) {
@@ -122,7 +122,7 @@ public class ArtistController {
         return "artist";
     }
 
-    @GetMapping("/artist/edit/{id}")
+    @GetMapping("/admin/artist/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Artist artist = artistService.findArtistById(id);
         model.addAttribute("artist", artist);
@@ -137,7 +137,7 @@ public class ArtistController {
     }
 
 
-    @PostMapping("/artist/delete")
+    @PostMapping("/admin/artist/delete")
     public String delete(@ModelAttribute("id") Long id) {
         if (id != null && artistService.existsById(id)) {
             Artist artist = artistService.findArtistById(id);

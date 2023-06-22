@@ -45,12 +45,12 @@
                 <hr>
                 <div th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}" class="row">
                     <div class="col-md-4">
-                        <a th:href="@{'/artist/edit/'+ ${artist.id}}" class="btn btn-primary">Modifica artista</a>
+                        <a th:href="@{'/admin/artist/edit/'+ ${artist.id}}" class="btn btn-primary">Modifica artista</a>
                     </div>
                     <div class="col-md-4">
-                        <form th:action="@{/artist/delete}" method="post" th:object="${artist}">
+                        <form th:action="@{/admin/artist/delete}" method="post" th:object="${artist}">
                             <input type="hidden" th:field="*{id}"/>
-                            <button type="submit" class="btn btn-danger" id="deleteEntity">Elimina</button>
+                            <button type="submit" class="btn btn-danger deleteEntity">Elimina</button>
                         </form>
                     </div>
                 </div>

@@ -40,14 +40,14 @@ public class MovieController {
     }
 
 
-    @GetMapping(value = "/createNewMovie")
+    @GetMapping(value = "/admin/createNewMovie")
     public String formNewMovie(Model model) {
         model.addAttribute("movie", new Movie());
         log.info("Redirecting to form new movie");
         return "admin/formNewMovie";
     }
 
-    @PostMapping("/newMovie")
+    @PostMapping("/admin/newMovie")
     public String createNewMovie(@Validated @ModelAttribute("movie") Movie movie, @RequestParam("coverImage") MultipartFile coverImage,
             @RequestParam("imageFiles") MultipartFile[] images, Model model,
             BindingResult bindingResult) {
@@ -79,14 +79,17 @@ public class MovieController {
             if (images != null) {
                 Set<ImageData> movieImages = new HashSet<>();
                 for (MultipartFile image : images) {
-                    ImageData imageData = ImageData.builder()
-                            .name(image.getOriginalFilename())
-                            .content(image.getBytes())
-                            .type(image.getContentType())
-                            .build();
-                    movieImages.add(imageData);
+                    if (image != null && !image.isEmpty()) {
+                        ImageData imageData = ImageData.builder()
+                                .name(image.getOriginalFilename())
+                                .content(image.getBytes())
+                                .type(image.getContentType())
+                                .build();
+                        movieImages.add(imageData);
+                    }
                 }
-                movie.setImages(movieImages);
+                log.info("Aggiunte {} immagini", movieImages.size());
+                movie.setImages(movieImages.size() > 0 ? movieImages : null);
             }
             movieService.save(movie);
         } catch (IOException ioex) {
@@ -167,7 +170,7 @@ public class MovieController {
     }
 
 
-    @PostMapping("/movie/delete")
+    @PostMapping("/admin/movie/delete")
     public String delete(@ModelAttribute("id") Long id) {
         if (id != null && movieService.existsById(id)) {
             movieService.deleteById(id);

@@ -85,7 +85,7 @@ public class ReviewController {
         return "redirect:/movie/" + movieId;
     }
 
-    @GetMapping("/deleteReview/{reviewId}/{movieId}")
+    @PostMapping("/admin/deleteReview/{reviewId}/{movieId}")
     public String delete(@PathVariable("reviewId") Long reviewId, @PathVariable("movieId") Long movieId) {
         if (reviewId != null && reviewService.existsById(reviewId)) {
             reviewService.deleteById(reviewId);
