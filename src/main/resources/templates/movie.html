@@ -15,6 +15,9 @@
 <div class="container-fluid">
     <div class="row" th:if="${movie}">
         <div class="col-md-6 col-md-offset-3">
+            <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert">
+                <p style="font-weight: bold;" th:text="${errorMessage}">Messaggio di errore</p>
+            </div>
             <div class="movie-info">
                 <h2><span th:text="${movie.title}"></span> (<span th:text="${movie.year}"></span>)</h2>
                 <hr>

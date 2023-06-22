@@ -3,6 +3,7 @@ package it.uniroma3.siw.service;
 
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.model.Review;
+import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.repository.ReviewRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,8 @@ public class ReviewService {
     }
 
     public Double calculateAverageVote(Movie movie) {
-        return reviewRepository.calculateAverageRating(movie.getId());
+        Double result = reviewRepository.calculateAverageRating(movie.getId());
+        return result != null ? result : 0D;
     }
 
     public boolean existsById(Long id) {
@@ -37,5 +39,9 @@ public class ReviewService {
 
     public void deleteById(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    public boolean existsByUser(User user) {
+        return reviewRepository.existsByUser(user);
     }
 }

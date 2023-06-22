@@ -1,11 +1,13 @@
 package it.uniroma3.siw.repository;
 
 
+import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.Movie;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public interface MovieRepository extends CrudRepository<Movie, Long> {
     boolean existsByTitleAndYear(String title, Integer year);
@@ -20,5 +22,8 @@ public interface MovieRepository extends CrudRepository<Movie, Long> {
     @Query(value = "SELECT AVG(r.vote) FROM review r WHERE r.movie_id = :movieId", nativeQuery = true)
     Double getAverageRatingByMovieId(Long movieId);
 
+    List<Movie> findAllByDirector(Artist artist);
+
+    List<Movie> findAllByActorsIn(Set<Artist> artists);
 
 }

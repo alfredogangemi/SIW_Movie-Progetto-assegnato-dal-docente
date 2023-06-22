@@ -3,9 +3,10 @@ package it.uniroma3.siw.controller;
 import it.uniroma3.siw.controller.validator.ArtistValidator;
 import it.uniroma3.siw.controller.validator.ImageValidator;
 import it.uniroma3.siw.model.Artist;
+import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.service.ArtistService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import it.uniroma3.siw.service.MovieService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,34 +16,37 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
+@Slf4j
 public class ArtistController {
 
-    private final ArtistService artistService;
-    private final ArtistValidator artistValidator;
-    private final ImageValidator imageValidator;
-    private final Logger logger = LoggerFactory.getLogger(ArtistController.class);
+    protected final ArtistService artistService;
+    protected final ArtistValidator artistValidator;
+    protected final ImageValidator imageValidator;
+    protected final MovieService movieService;
 
     @Autowired
-    public ArtistController(ArtistService artistService, ArtistValidator artistValidator, ImageValidator imageValidator) {
+    public ArtistController(ArtistService artistService, ArtistValidator artistValidator, ImageValidator imageValidator, MovieService movieService) {
         this.artistService = artistService;
         this.artistValidator = artistValidator;
         this.imageValidator = imageValidator;
+        this.movieService = movieService;
     }
 
 
     @GetMapping(value = "/createNewArtist")
     public String formNewArtist(Model model) {
         model.addAttribute("artist", new Artist());
-        logger.info("Redirecting to form new artist");
+        log.info("Redirecting to form new artist");
         return "admin/formNewArtist";
     }
 
 
     @PostMapping("/newArtist")
     public String createNewArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
-                                  BindingResult bindingResult) {
+            BindingResult bindingResult) {
         //1. Validazione dell'artista
         artistValidator.validate(artist, bindingResult, true);
         //2. Validazione dell'immagine se presente
@@ -53,13 +57,17 @@ public class ArtistController {
             return "admin/formNewArtist";
         }
         try {
-            artistService.save(artist, file);
+            if (file != null && !file.isEmpty()) {
+                artistService.save(artist, file);
+            } else {
+                artistService.save(artist);
+            }
         } catch (IOException ioex) {
-            logger.error("Errore nella gestione dell'allegato nell'artista", ioex);
+            log.error("Errore nella gestione dell'allegato nell'artista", ioex);
             bindingResult.reject("image.upload.generic.error");
             return "admin/formNewArtist";
         } catch (Exception ex) {
-            logger.error("Errore generico durante la creazione dell'artista", ex);
+            log.error("Errore generico durante la creazione dell'artista", ex);
             bindingResult.reject("artist.generic.error");
             return "admin/formNewArtist";
         }
@@ -70,7 +78,7 @@ public class ArtistController {
 
     @PostMapping("/updateArtist")
     public String updateArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
-                               BindingResult bindingResult, @ModelAttribute("id") Long id) {
+            BindingResult bindingResult, @ModelAttribute("id") Long id) {
         if (id != null && !artistService.existsById(id)) {
             bindingResult.reject("artist.generic.error");
             return "admin/formUpdateArtist";
@@ -91,11 +99,11 @@ public class ArtistController {
                 artistService.saveWithPresentImage(artist);
             }
         } catch (IOException ioex) {
-            logger.error("Errore nella gestione dell'allegato nell'artista", ioex);
+            log.error("Errore nella gestione dell'allegato nell'artista", ioex);
             bindingResult.reject("image.upload.generic.error");
             return "admin/formNewArtist";
         } catch (Exception ex) {
-            logger.error("Errore generico durante l'aggiornamento dell'artista");
+            log.error("Errore generico durante l'aggiornamento dell'artista");
             ex.printStackTrace();
             bindingResult.reject("artist.generic.error");
             return "admin/formUpdateArtist";
@@ -132,9 +140,21 @@ public class ArtistController {
     @PostMapping("/artist/delete")
     public String delete(@ModelAttribute("id") Long id) {
         if (id != null && artistService.existsById(id)) {
+            Artist artist = artistService.findArtistById(id);
+            List<Movie> starredMovies = movieService.getArtistStarredMovies(artist);
+            for (Movie movie : starredMovies) {
+                movie.getActors()
+                        .remove(artist);
+                movieService.save(movie);
+            }
+            List<Movie> directedMovies = movieService.getArtistDirectedMovies(artist);
+            for (Movie movie : directedMovies) {
+                movie.setDirector(null);
+                movieService.save(movie);
+            }
             artistService.deleteById(id);
         } else {
-            logger.warn("Errore durante l'emininazione dell'artista con id {}", id);
+            log.warn("Errore durante l'emininazione dell'artista con id {}", id);
         }
         return "redirect:/";
     }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 
@@ -25,22 +26,31 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ReviewController {
 
-    private final MovieService movieService;
-    private final ReviewValidator reviewValidator;
-    private final ReviewService reviewService;
-    private final CredentialsService credentialsService;
+    protected final MovieService movieService;
+    protected final ReviewValidator reviewValidator;
+    protected final ReviewService reviewService;
+    protected final CredentialsService credentialsService;
+    protected final AuthenticationController authenticationController;
 
     @Autowired
     public ReviewController(MovieService movieService, ReviewValidator reviewValidator, ReviewService reviewService,
-            CredentialsService credentialsService) {
+            CredentialsService credentialsService, AuthenticationController authenticationController) {
         this.movieService = movieService;
         this.reviewValidator = reviewValidator;
         this.reviewService = reviewService;
         this.credentialsService = credentialsService;
+        this.authenticationController = authenticationController;
     }
 
     @GetMapping("/reviewMovie/{movieId}")
-    public String formNewReview(Model model, @PathVariable("movieId") Long movieId) {
+    public String formNewReview(Model model, @PathVariable("movieId") Long movieId, RedirectAttributes redirectAttributes) {
+        User user = authenticationController.getCurrentUser();
+        if (user != null) {
+            if (reviewService.existsByUser(user)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Hai già recensito questo film.");
+                return "redirect:/movie/" + movieId;
+            }
+        }
         model.addAttribute("review", new Review());
         model.addAttribute("movieId", movieId);
         return "formNewReview";
@@ -52,7 +62,7 @@ public class ReviewController {
             @PathVariable("movieId") Long movieId, BindingResult bindingResult) {
         reviewValidator.validate(review, bindingResult);
         if (bindingResult.hasErrors()) {
-            return formNewReview(model, movieId);
+            return "formNewReview";
         }
         log.info("Persisting new review for movie {}", movieId);
         Movie movie = movieService.findMovieById(movieId);

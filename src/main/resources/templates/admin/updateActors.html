@@ -12,7 +12,7 @@
 <body>
 <div class="container mt-4 flex-wrapper">
     <div class="form-group mx-sm-3 mb-2">
-        <h3>Artisti selezionati per questo film</h3>
+        <h3>Attori selezionati per questo film</h3>
         <div th:if="${movie.actors.isEmpty()}">
             <p>Nessun attore presente.</p>
         </div>
@@ -36,7 +36,7 @@
         <div class="form-group mx-sm-3 mb-2">
             <label for="searchInput" class="sr-only">Search</label>
             <input type="text" class="form-control" onkeyup="filterTable('artistTable')" id="searchInput"
-                   placeholder="Cerca un regista">
+                   placeholder="Cerca un artista">
         </div>
     </div>
     <div th:if="${actorsToAdd.isEmpty()}">

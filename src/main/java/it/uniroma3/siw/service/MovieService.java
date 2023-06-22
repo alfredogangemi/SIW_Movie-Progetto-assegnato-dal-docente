@@ -1,6 +1,7 @@
 package it.uniroma3.siw.service;
 
 import it.uniroma3.siw.dto.MoviePreviewDto;
+import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.repository.MovieRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -67,7 +70,22 @@ public class MovieService {
         return movieRepository.existsById(id);
     }
 
+
+    @Transactional
     public void deleteById(Long id) {
         movieRepository.deleteById(id);
+    }
+
+
+    @Transactional
+    public List<Movie> getArtistStarredMovies(Artist artist) {
+        Set<Artist> set = new HashSet<Artist>();
+        set.add(artist);
+        return movieRepository.findAllByActorsIn(set);
+    }
+
+    @Transactional
+    public List<Movie> getArtistDirectedMovies(Artist artist) {
+        return movieRepository.findAllByDirector(artist);
     }
 }

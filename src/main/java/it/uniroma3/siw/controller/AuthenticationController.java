@@ -32,7 +32,8 @@ public class AuthenticationController {
     protected CredentialsValidator credentialsValidator;
 
     @Autowired
-    public AuthenticationController(MovieService movieService, UserService userService, CredentialsService credentialsService, UserValidator userValidator, CredentialsValidator credentialsValidator) {
+    public AuthenticationController(MovieService movieService, UserService userService, CredentialsService credentialsService,
+            UserValidator userValidator, CredentialsValidator credentialsValidator) {
         this.movieService = movieService;
         this.userService = userService;
         this.credentialsService = credentialsService;
@@ -58,36 +59,23 @@ public class AuthenticationController {
         List<MoviePreviewDto> topRatedMovies = movieService.getTopRatedMovies();
         model.addAttribute("latestMovies", latestMovies);
         model.addAttribute("topRatedMovies", topRatedMovies);
-        /*
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return "index.html";
-        } else {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
-                    .getAuthentication()
-                    .getPrincipal();
-            Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-            if (credentials.getRole()
-                    .equals(Credentials.ADMIN_ROLE)) {
-                return "admin/indexAdmin.html";
-            }
-        }*/
         return "index";
     }
 
     @GetMapping(value = "/success")
     public String defaultAfterLogin(Model model) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
         Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
         return index(model);
     }
 
     @PostMapping(value = {"/register"})
     public String registerUser(@ModelAttribute("user") User user,
-                               BindingResult bindingResult,
-                               @ModelAttribute("credentials") Credentials credentials,
-                               Model model) {
+            BindingResult bindingResult,
+            @ModelAttribute("credentials") Credentials credentials,
+            Model model) {
         userValidator.validate(user, bindingResult);
         credentialsValidator.validate(credentials, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -98,5 +86,14 @@ public class AuthenticationController {
         credentialsService.saveCredentials(credentials);
         model.addAttribute("user", user);
         return "signUpSuccessfully";
+    }
+
+
+    public User getCurrentUser() {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Credentials credentials = credentialsService.getCredentials(user.getUsername());
+        return credentials.getUser();
     }
 }
