@@ -9,8 +9,6 @@ import it.uniroma3.siw.service.MovieService;
 import it.uniroma3.siw.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,14 +45,17 @@ public class ReviewController {
         User user = authenticationController.getCurrentUser();
         if (user != null) {
             if (reviewService.existsByUser(user)) {
+                log.warn("User has already reviewed the movie with ID {}", movieId);
                 redirectAttributes.addFlashAttribute("errorMessage", "Hai già recensito questo film.");
                 return "redirect:/movie/" + movieId;
             }
         }
+        log.debug("Rendering form for new review for movie with ID {}", movieId);
         model.addAttribute("review", new Review());
         model.addAttribute("movieId", movieId);
         return "formNewReview";
     }
+
 
 
     @PostMapping("/addReviewToMovie/{movieId}")
@@ -68,11 +69,8 @@ public class ReviewController {
         Movie movie = movieService.findMovieById(movieId);
         if (movie != null) {
             review.setCreationDate(LocalDateTime.now());
-            String username = ((UserDetails) SecurityContextHolder.getContext()
-                    .getAuthentication()
-                    .getPrincipal()).getUsername();
-            User user = credentialsService.getCredentials(username)
-                    .getUser();
+
+            User user = authenticationController.getCurrentUser();
             review.setUser(user);
             reviewService.save(review);
             movie.getReviews()
@@ -85,10 +83,13 @@ public class ReviewController {
         return "redirect:/movie/" + movieId;
     }
 
+
     @PostMapping("/admin/deleteReview/{reviewId}/{movieId}")
     public String delete(@PathVariable("reviewId") Long reviewId, @PathVariable("movieId") Long movieId) {
+        log.debug("Deleting review with ID {} for movie with ID {}", reviewId, movieId);
         if (reviewId != null && reviewService.existsById(reviewId)) {
             reviewService.deleteById(reviewId);
+
             Movie movie = movieService.findMovieById(movieId);
             if (movie != null) {
                 Double averageVote = reviewService.calculateAverageVote(movie);
@@ -96,10 +97,10 @@ public class ReviewController {
                 movieService.save(movie);
             }
         } else {
-            log.warn("Errore durante l'emininazione della recensione con id {}", reviewId);
+            log.warn("Error deleting review with ID {}", reviewId);
         }
+        log.debug("Review with ID {} deleted for movie with ID {}", reviewId, movieId);
         return "redirect:/movie/" + movieId;
     }
-
 
 }

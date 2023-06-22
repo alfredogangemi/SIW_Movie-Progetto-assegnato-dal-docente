@@ -130,6 +130,7 @@ public class MovieController {
         Artist director = artistService.findArtistById(directorId);
         movie.setDirector(director);
         movieService.save(movie);
+        log.info("Director {} added to movie {}", directorId, movieId);
         return "redirect:/movie/" + movieId;
     }
 
@@ -144,6 +145,7 @@ public class MovieController {
 
     @GetMapping("/admin/updateActors/{id}")
     public String updateActors(@PathVariable("id") Long id, Model model) {
+        log.info("Form update actors for movie {}", id);
         model.addAttribute("actorsToAdd", artistService.retrieveArtistsNotInMovie(id));
         model.addAttribute("movie", movieService.findMovieById(id));
         return "admin/updateActors";
@@ -151,34 +153,42 @@ public class MovieController {
 
     @GetMapping(value = "/admin/addActorToMovie/{actorId}/{movieId}")
     public String addActorToMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
+        log.debug("Adding actor with ID {} to movie with ID {}", actorId, movieId);
         Movie movie = movieService.findMovieById(movieId);
         Artist actor = artistService.findArtistById(actorId);
         Set<Artist> actors = movie.getActors();
         actors.add(actor);
         movieService.save(movie);
+        log.debug("Actor with ID {} added to movie with ID {}", actorId, movieId);
         return updateActors(movieId, model);
     }
 
     @GetMapping(value = "/admin/removeActorFromMovie/{actorId}/{movieId}")
     public String removeActorFromMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
+        log.debug("Removing actor with ID {} from movie with ID {}", actorId, movieId);
         Movie movie = movieService.findMovieById(movieId);
         Artist actor = artistService.findArtistById(actorId);
         Set<Artist> actors = movie.getActors();
         actors.remove(actor);
         movieService.save(movie);
+        log.debug("Actor with ID {} removed from movie with ID {}", actorId, movieId);
         return updateActors(movieId, model);
     }
+
 
 
     @PostMapping("/admin/movie/delete")
     public String delete(@ModelAttribute("id") Long id) {
         if (id != null && movieService.existsById(id)) {
+            log.debug("Deleting movie with ID: {}", id);
             movieService.deleteById(id);
+            log.debug("Movie with ID {} deleted successfully", id);
         } else {
-            log.warn("Errore durante l'emininazione del film con id {}", id);
+            log.warn("Error while deleting movie with ID {}", id);
         }
         return "redirect:/";
     }
+
 
 
 }
