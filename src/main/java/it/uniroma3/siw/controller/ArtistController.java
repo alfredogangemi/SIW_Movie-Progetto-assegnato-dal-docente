@@ -47,9 +47,8 @@ public class ArtistController {
     @PostMapping("/admin/newArtist")
     public String createNewArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
             BindingResult bindingResult) {
-        //1. Validazione dell'artista
+        log.debug("Starting create new artist..");
         artistValidator.validate(artist, bindingResult, true);
-        //2. Validazione dell'immagine se presente
         if (file != null && !file.isEmpty()) {
             imageValidator.validate(file, bindingResult);
         }
@@ -62,12 +61,13 @@ public class ArtistController {
             } else {
                 artistService.save(artist);
             }
+            log.debug("New artist created with ID: {}", artist.getId());
         } catch (IOException ioex) {
-            log.error("Errore nella gestione dell'allegato nell'artista", ioex);
+            log.error("Error handling attachment in artist", ioex);
             bindingResult.reject("image.upload.generic.error");
             return "admin/formNewArtist";
         } catch (Exception ex) {
-            log.error("Errore generico durante la creazione dell'artista", ex);
+            log.error("Generic error during artist creation", ex);
             bindingResult.reject("artist.generic.error");
             return "admin/formNewArtist";
         }
@@ -76,11 +76,14 @@ public class ArtistController {
     }
 
 
+
     @PostMapping("/admin/updateArtist")
     public String updateArtist(@Validated @ModelAttribute("artist") Artist artist, @RequestParam("coverFile") MultipartFile file, Model model,
             BindingResult bindingResult, @ModelAttribute("id") Long id) {
+        log.debug("Updating artist with ID: {}", id);
         if (id != null && !artistService.existsById(id)) {
             bindingResult.reject("artist.generic.error");
+            log.warn("Artist with ID {} does not exist. Update operation aborted.", id);
             return "admin/formUpdateArtist";
         }
         artistValidator.validate(artist, bindingResult, false);
@@ -98,23 +101,26 @@ public class ArtistController {
             } else {
                 artistService.saveWithPresentImage(artist);
             }
+            log.debug("Artist with ID {} updated successfully", id);
         } catch (IOException ioex) {
-            log.error("Errore nella gestione dell'allegato nell'artista", ioex);
+            log.error("Error handling attachment for artist", ioex);
             bindingResult.reject("image.upload.generic.error");
             return "admin/formNewArtist";
         } catch (Exception ex) {
-            log.error("Errore generico durante l'aggiornamento dell'artista");
-            ex.printStackTrace();
+            log.error("Generic error occurred during artist update", ex);
             bindingResult.reject("artist.generic.error");
             return "admin/formUpdateArtist";
         }
+
         model.addAttribute("artist", artist);
         return "redirect:/artist/" + artist.getId();
     }
 
 
+
     @GetMapping("/artist/{id}")
     public String getArtist(@PathVariable("id") Long id, Model model) {
+        log.debug("Fetching artist with ID: {}", id);
         Artist artist = artistService.findArtistById(id);
         if (artist != null) {
             model.addAttribute("artist", artist);
@@ -124,6 +130,7 @@ public class ArtistController {
 
     @GetMapping("/admin/artist/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
+        log.info("Redirecting to artist update form for artist {}", id);
         Artist artist = artistService.findArtistById(id);
         model.addAttribute("artist", artist);
         return "admin/formUpdateArtist";
@@ -131,6 +138,7 @@ public class ArtistController {
 
     @GetMapping("/searchArtist")
     public String searchArtist(Model model) {
+        log.trace("Redirecting to searchArtists...");
         Iterable<Artist> artists = artistService.getAll();
         model.addAttribute("artists", artists);
         return "searchArtist";
@@ -140,6 +148,7 @@ public class ArtistController {
     @PostMapping("/admin/artist/delete")
     public String delete(@ModelAttribute("id") Long id) {
         if (id != null && artistService.existsById(id)) {
+            log.debug("Deleting artist with ID and removing all references: {}", id);
             Artist artist = artistService.findArtistById(id);
             List<Movie> starredMovies = movieService.getArtistStarredMovies(artist);
             for (Movie movie : starredMovies) {
@@ -153,6 +162,7 @@ public class ArtistController {
                 movieService.save(movie);
             }
             artistService.deleteById(id);
+            log.debug("Deleting artist with ID: {}", id);
         } else {
             log.warn("Errore durante l'emininazione dell'artista con id {}", id);
         }
