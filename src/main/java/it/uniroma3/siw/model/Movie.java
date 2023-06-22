@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,14 +26,33 @@ public class Movie {
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<ImageData> images;
 
+    @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private ImageData cover;
+
     @ManyToOne
-    private Person director;
+    private Artist director;
 
-    @ManyToMany(mappedBy = "filmography")
-    private Set<Person> actors;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Artist> actors;
 
-    @OneToMany(cascade = {CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "movie_id")
-    private List<Review> reviews;
+    private Set<Review> reviews;
+
+    private Double averageVote;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Movie movie)) {
+            return false;
+        }
+        return movie.getId()
+                .equals(this.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode() + title.hashCode() + year.hashCode();
+    }
 
 }

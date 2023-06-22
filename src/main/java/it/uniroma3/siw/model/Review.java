@@ -19,14 +19,13 @@ public class Review {
     private Integer vote;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private Integer text;
-
-    @Column(nullable = false)
-    private Integer likes;
+    private String text;
 
     @Column(nullable = false)
     private LocalDateTime creationDate;
 
-    //Possibilità di usare un metodo per persist per valorizzare le property automaticamente in fase di salvataggio
+    @OneToOne
+    private User user;
+
 
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/header.css">
+    <title>Header</title>
+</head>
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">SIW Movie</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="/searchMovie">Consulta Film</a></li>
+                    <li><a href="/searchArtist">Consulta Artisti</a></li>
+                    <li th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin Menu
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/admin/createNewMovie">Aggiungi Film</a></li>
+                            <li><a href="/admin/createNewArtist">Aggiungi Artista</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li th:if="${userDetails}"><a th:text="${userDetails.username}" href="#"><span
+                            class="glyphicon glyphicon-user"></span>
+                        Registrati</a></li>
+                    <li th:if="${userDetails}"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>
+                        Logout</a></li>
+                    <li th:unless="${userDetails}"><a href="/signUp"><span class="glyphicon glyphicon-user"></span>
+                        Registrati</a></li>
+                    <li th:unless="${userDetails}"><a href="/login"><span class="glyphicon glyphicon-log-in"></span>
+                        Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</html>

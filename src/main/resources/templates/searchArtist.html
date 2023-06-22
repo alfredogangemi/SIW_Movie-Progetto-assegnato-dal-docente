@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ricerca Artisti</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+</head>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<body>
+<div class="container mt-4 flex-wrapper">
+    <div class="form-group mx-sm-3 mb-2 text-right">
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="searchInput" class="sr-only">Search</label>
+            <input type="text" class="form-control" onkeyup="filterTable('artistTable')" id="searchInput"
+                   placeholder="Cerca un artista">
+        </div>
+    </div>
+    <div th:if="${artists.isEmpty()}">
+        <p>Nessun risultato trovato.</p>
+    </div>
+    <table id="artistTable" class="table mt-4" th:unless="${artists.isEmpty()}">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Data di Nascita</th>
+            <th scope="col">Data di Morte</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="artist : ${artists}">
+            <td th:text="${artist.name + ' ' +artist.surname}">Nome Artista</td>
+            <td th:text="${#temporals.format(artist.dateOfBirth, 'dd/MM/yyyy')}">Data di Nascita Artista</td>
+            <td th:text="${#temporals.format(artist.dateOfDeath, 'dd/MM/yyyy')}">Data di Morte Artista</td>
+            <td>
+                <a th:href="@{'/artist/'+ ${artist.id}}" class="btn btn-primary btn-sm mr-2">Visualizza</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/filterTable.js"></script>
+</html>

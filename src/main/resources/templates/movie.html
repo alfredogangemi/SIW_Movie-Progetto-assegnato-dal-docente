@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Film</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+</head>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<body>
+<div class="container-fluid">
+    <div class="row" th:if="${movie}">
+        <div class="col-md-6 col-md-offset-3">
+            <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert">
+                <p style="font-weight: bold;" th:text="${errorMessage}">Messaggio di errore</p>
+            </div>
+            <div class="movie-info">
+                <h2><span th:text="${movie.title}"></span> (<span th:text="${movie.year}"></span>)</h2>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Voto Medio:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <strong><span
+                                th:text="${#numbers.formatDecimal(movie.averageVote, 1, 1, 'COMMA')}"></span></strong>
+                        <p class="fa fa-star checked"></p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">
+                        <span><strong>Regista: </strong></span>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:if="${movie.director != null}" th:href="@{'/artist/' + ${movie.director.id}}">
+                            <span th:text="${movie.director.name} + ' ' + ${movie.director.surname}"></span>
+                        </a>
+                        <span th:unless="${movie.director != null}"> Nessun regista impostato</span>
+                    </div>
+                    <div th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}" class="col-md-4">
+                        <a class="btn btn-default" th:href="@{'/admin/addDirector/'+ ${movie.id}}"
+                           th:text="${movie.director != null ? 'Modifica Regista' : 'Aggiungi Regista'}">Aggiungi/Modifica
+                            Regista</a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Attori:</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <span th:if="${movie.actors.size() == 0}"> Nessun attore impostato</span>
+                        <table th:unless="${movie.actors.size() == 0}">
+                            <tbody>
+                            <tr th:each="actor : ${movie.actors}">
+                                <td>
+                                    <a th:href="@{'/artist/' + ${actor.id}}">
+                                        <span th:text="${actor.name} + ' ' + ${actor.surname}"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}" class="col-md-4">
+                        <a class="btn btn-default" th:href="@{'/admin/updateActors/'+ ${movie.id}}"
+                           th:text="${movie.actors.size() == 0 ? 'Aggiungi Attori' : 'Modifica Attori'}">Aggiungi/Modifica
+                            Attori</a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12 center-image">
+                        <img th:src="${movie.getCover().generateHtmlSource()}" style="max-width: 100%" alt="Copertina">
+                    </div>
+                </div>
+                <hr>
+                <div th:if="${movie.images != null && movie.images.size() > 0}" id="carouselExample"
+                     class="carousel slide"
+                     data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div th:each="image, iterStat : ${movie.images}" class="item"
+                             th:classappend="${iterStat.index == 0 ? 'active' : ''}">
+                            <img th:src="${image.generateHtmlSource()}" alt="Slide"
+                                 th:alt="${'Slide ' + (iterStat.index + 1)}">
+                        </div>
+                    </div>
+                    <a class="left carousel-control" href="#carouselExample" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#carouselExample" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
+                <hr th:if="${movie.images != null && movie.images.size() > 0}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Recensioni</h3>
+                    </div>
+                    <div th:unless="${#strings.equalsIgnoreCase(role, 'ADMIN')}" class="col-md-6">
+                        <a th:href="@{'/reviewMovie/' + ${movie.id}}" class="btn btn-primary btn-sm pull-right">Aggiungi
+                            recensione</a>
+                    </div>
+                </div>
+                <div th:if="${movie.reviews.size() > 0}" th:each="review : ${movie.reviews}" class="reviews-section">
+                    <div class="row review-row">
+                        <div class="col-md-12">
+                            <div class="card-review">
+                                <div class="review-first-sub-card">
+                                    <h4 th:text="${review.title}" class="review-card-title"></h4>
+                                    <div class="rating-stars">
+                                        <p th:each="i : ${#numbers.sequence(1, review.vote)}"
+                                           class="fa fa-star checked"></p>
+                                        <p th:if="${review.vote} < 5"
+                                           th:each="i : ${#numbers.sequence(1, 5 - review.vote)}"
+                                           class="fa fa-star"></p>
+                                    </div>
+                                </div>
+                                <div class="review-second-sub-card review-text" style="overflow: auto;">
+                                    <p th:text="${review.text}">Testo recensione</p>
+                                    <cite style="font-weight: bold;"
+                                          th:text="${review.user.name} + ' ' + ${review.user.surname}">User</cite>
+                                    <form id="deleteReviewForm" th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}"
+                                          th:action="@{'/admin/deleteReview/' + ${review.id} + '/' + ${movie.id}}"
+                                          method="post">
+                                        <button type="submit" class="btn btn-link btn-sm pull-right deleteEntity">
+                                            Elimina Recensione
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 20px;"></div>
+                </div>
+                <hr>
+                <div th:if="${#strings.equalsIgnoreCase(role, 'ADMIN')}" class="text-center">
+                    <form th:action="@{/admin/movie/delete}" method="post" th:object="${movie}">
+                        <input type="hidden" th:field="*{id}"/>
+                        <button type="submit" class="btn btn-danger deleteEntity">Elimina</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/delete.js"></script>
+</body>
+</html>

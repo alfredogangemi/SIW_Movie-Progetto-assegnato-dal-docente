@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SIW Movie</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+</head>
+
+
+<!-- HEADER -->
+<header th:replace="~{fragments/header :: header}"></header>
+
+<body>
+
+<div class="home-div">
+    <h1 class="home-tile-text">SIW Movie</h1>
+    <hr class="home-divider">
+    <p class="home-subtitle-text">Vota i tuoi film preferiti!</p>
+</div>
+<div class="home-div-last-created">
+    <h2>Ultimi Film Aggiunti</h2>
+    <div class="row">
+        <div class="card-home" th:each="movie : ${latestMovies}">
+            <img th:src="${movie.getImageSrc()}" alt="...">
+            <a th:href="@{'movie/'+ ${movie.id}}">
+                <h3 class="card-title-home" th:text="${movie.getTitle()}">Titolo</h3>
+            </a>
+            <p class="card-subtitle" th:text="${'Voto: '+#numbers.formatDecimal(movie.vote, 1, 1, 'COMMA')}">Voto</p>
+        </div>
+    </div>
+</div>
+<div class="home-div">
+    <h2>I più votati</h2>
+    <div class="row">
+        <div class="card-home" th:each="movie : ${topRatedMovies}">
+            <img th:src="${movie.getImageSrc()}" alt="...">
+            <a th:href="@{'movie/'+ ${movie.id}}">
+                <h3 class="card-title-home" th:text="${movie.getTitle()}">Titolo</h3>
+            </a>
+            <p class="card-subtitle" th:text="${'Voto: '+#numbers.formatDecimal(movie.vote, 1, 1, 'COMMA')}">
+                Voto</p>
+        </div>
+    </div>
+</div>
+
+
+<div><br></div>
+
+</body>
+<!-- FOOTER -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Imposta Regista</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+</head>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<body>
+<div class="container mt-4 flex-wrapper">
+    <div class="form-group mx-sm-3 mb-2">
+        <h3>Attori selezionati per questo film</h3>
+        <div th:if="${movie.actors.isEmpty()}">
+            <p>Nessun attore presente.</p>
+        </div>
+        <table class="table table-sm mt-8" th:unless="${movie.actors.isEmpty()}">
+            <tbody>
+            <tr th:each="artist : ${movie.actors}">
+                <td>
+                    <span th:text="${artist.name + ' ' + artist.surname}">---</span>
+                    <a th:href="@{'/admin/removeActorFromMovie/' + ${artist.id} + '/'+ ${movie.id}}">
+                        <span>Rimuovi</span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+    </div>
+    <h3>Attori da aggiungere</h3>
+    <hr>
+    <div class="form-group mx-sm-3 mb-2 text-right">
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="searchInput" class="sr-only">Search</label>
+            <input type="text" class="form-control" onkeyup="filterTable('artistTable')" id="searchInput"
+                   placeholder="Cerca un artista">
+        </div>
+    </div>
+    <div th:if="${actorsToAdd.isEmpty()}">
+        <p>Nessun risultato trovato.</p>
+    </div>
+    <table class="table table-sm mt-8" id="artistTable" th:unless="${actorsToAdd.isEmpty()}">
+        <tbody>
+        <tr th:each="artist : ${actorsToAdd}">
+            <td>
+                <span th:text="${artist.name + ' ' + artist.surname}">---</span>
+                <a th:href="@{'/admin/addActorToMovie/' + ${artist.id} + '/'+ ${movie.id}}">
+                    <span>Aggiungi</span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <a th:href="@{'/movie/'+ ${movie.id}}" class="btn btn-primary">Fine</a>
+    </div>
+</div>
+</body>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/filterTable.js"></script>
+</html>
